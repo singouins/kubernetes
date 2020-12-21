@@ -3,7 +3,7 @@ kind: Service
 
 metadata:
   namespace: singouins
-  name: sep-backend-lb
+  name: sep-backend-loadbalancer
   labels:
     tier: sep-backend
   annotations:
