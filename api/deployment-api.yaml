@@ -57,6 +57,8 @@ spec:
         env:
         - name: FLASK_DEBUG
           value: '--debugger'
+        - name: FLASK_PRODUCTION
+          value: 'true'
         - name: FLASK_THREAD
           value: '--without-threads'
         - name: FLASK_ENV
