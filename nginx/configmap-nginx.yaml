@@ -59,18 +59,6 @@ data:
     #
     # <WIKI>
     #
-
-    server {
-      listen      80;
-      server_name <URL_WIKI>;
-      access_log  /var/log/nginx/access.log maxlog;
-      location    = / { return 418; }
-      location    ~ \.(asp|cgi|htm|html|js|php)$ { access_log off; error_log off; deny all; }
-
-      location /.well-known/acme-challenge/ {
-          root /var/www/certbot;
-      }
-    }
     server {
       listen      443 ssl proxy_protocol;
       server_name <URL_WIKI>;
@@ -103,18 +91,6 @@ data:
     #
     # <SQL>
     #
-
-    server {
-      listen      80;
-      server_name <URL_SQL>;
-      access_log  /var/log/nginx/access.log maxlog;
-      location    = / { return 418; }
-      location    ~ \.(asp|cgi|htm|html|js|php)$ { access_log off; error_log off; deny all; }
-
-      location /.well-known/acme-challenge/ {
-          root /var/www/certbot;
-      }
-    }
     server {
       listen      443 ssl;
       server_name <URL_SQL>;
@@ -142,21 +118,10 @@ data:
     #
     # PROTO
     server {
-      listen      80;
-      server_name <URL_API>;
-      access_log  /var/log/nginx/access.log maxlog;
-      location    = / { return 418; }
-      location    ~ \.(asp|cgi|htm|html|js|php)$ { access_log off; error_log off; deny all; }
-
-      location /.well-known/acme-challenge/ {
-          root /var/www/certbot;
-      }
-    }
-    server {
       listen      443 ssl;
       server_name <URL_API_PROTO>;
       access_log  /var/log/nginx/access.log maxlog;
-      #add_header Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
+      add_header Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
       ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
       ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
@@ -184,17 +149,6 @@ data:
     }
     # PROD
     server {
-      listen      80;
-      server_name <URL_API>;
-      access_log  /var/log/nginx/access.log maxlog;
-      location    = / { return 418; }
-      location    ~ \.(asp|cgi|htm|html|js|php)$ { access_log off; error_log off; deny all; }
-
-      location /.well-known/acme-challenge/ {
-          root /var/www/certbot;
-      }
-    }
-    server {
       listen      443 ssl;
       server_name <URL_API>;
       access_log  /var/log/nginx/access.log maxlog;
@@ -217,18 +171,6 @@ data:
     #
     # <REDCO>
     #
-
-    server {
-      listen      80;
-      server_name <URL_REDCO>;
-      access_log  /var/log/nginx/access.log maxlog;
-      location    = / { return 418; }
-      location    ~ \.(asp|cgi|htm|html|js|php)$ { access_log off; error_log off; deny all; }
-
-      location /.well-known/acme-challenge/ {
-          root /var/www/certbot;
-      }
-    }
     server {
       listen      443 ssl;
       server_name <URL_REDCO>;
@@ -251,16 +193,6 @@ data:
     #
     # <GRAFANA>
     #
-
-    server {
-      listen      80;
-      server_name <URL_GRAPH>;
-      access_log  /var/log/nginx/access.log maxlog;
-
-      location /.well-known/acme-challenge/ {
-          root /var/www/certbot;
-      }
-    }
     server {
       listen      443 ssl;
       server_name <URL_GRAPH>;
