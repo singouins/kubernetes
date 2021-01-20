@@ -51,8 +51,8 @@ data:
       log_not_found off;
       deny          all;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
     }
 
@@ -61,12 +61,12 @@ data:
     #
     server {
       listen      443 ssl proxy_protocol;
-      server_name <URL_WIKI>;
+      server_name wiki.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         auth_basic              "WIKI Basic Auth";
@@ -93,12 +93,12 @@ data:
     #
     server {
       listen      443 ssl;
-      server_name <URL_SQL>;
+      server_name sql.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         auth_basic              "SQL Basic Auth";
@@ -121,12 +121,12 @@ data:
     # PROTO
     server {
       listen      443 ssl;
-      server_name <URL_API_PROTO>;
+      server_name proto-api.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         proxy_pass              http://<SVC_API_PROTO>:5000;
@@ -152,12 +152,12 @@ data:
     # PROD
     server {
       listen      443 ssl;
-      server_name <URL_API>;
+      server_name api.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       #add_header Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         proxy_pass              http://<SVC_API>:5000;
@@ -175,12 +175,12 @@ data:
     #
     server {
       listen      443 ssl;
-      server_name <URL_REDCO>;
+      server_name redco.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         auth_basic              "REDCO Basic Auth";
@@ -197,12 +197,12 @@ data:
     #
     server {
       listen      443 ssl;
-      server_name <URL_GRAPH>;
+      server_name graph.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         proxy_pass              http://<SVC_GRAFANA>:3000;
@@ -217,12 +217,12 @@ data:
     #
     server {
       listen      443 ssl;
-      server_name <URL_FILESTASH>;
+      server_name filestash.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         auth_basic              "FILESTASH Basic Auth";
@@ -237,33 +237,33 @@ data:
     #
     # <GAMES>
     #
-    # PROTO
-    server {
-      listen      443 ssl;
-      server_name <URL_GAMES_PROTO>;
-      access_log  /var/log/nginx/access.log maxlog;
-      add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
-
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
-
-      location / {
-        index                index.html;
-        root                 /var/www/websites/<URL_GAMES_PROTO>;
-      }
-    }
     # PROD
     server {
       listen      443 ssl;
-      server_name <URL_GAMES>;
+      server_name games.<SEP_DOMAIN>;
       access_log  /var/log/nginx/access.log maxlog;
       add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
-      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
 
       location / {
         index                index.html;
-        root                 /var/www/websites/<URL_GAMES>;
+        root                 /var/www/websites/games.<SEP_DOMAIN>;
+      }
+    }
+    # PROTO
+    server {
+      listen      443 ssl;
+      server_name proto-games.<SEP_DOMAIN>;
+      access_log  /var/log/nginx/access.log maxlog;
+      add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
+
+      ssl_certificate     /etc/letsencrypt/live/<SEP_DOMAIN>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<SEP_DOMAIN>/privkey.pem;
+
+      location / {
+        index                index.html;
+        root                 /var/www/websites/proto-games.<SEP_DOMAIN>;
       }
     }
