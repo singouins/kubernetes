@@ -61,17 +61,17 @@ spec:
         - name: SEP_MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-proto-api-secret
               key: sql-user
         - name: SEP_MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-proto-api-secret
               key: sql-pass
         - name: SEP_MYSQL_DB
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-proto-api-secret
               key: sql-user
         - name: SEP_MYSQL_HOST
           valueFrom:
