@@ -237,6 +237,22 @@ data:
     #
     # <GAMES>
     #
+    # PROTO
+    server {
+      listen      443 ssl;
+      server_name <URL_GAMES_PROTO>;
+      access_log  /var/log/nginx/access.log maxlog;
+      add_header  Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
+
+      ssl_certificate     /etc/letsencrypt/live/<BASE_URL>/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/<BASE_URL>/privkey.pem;
+
+      location / {
+        index                index.html;
+        root                 /var/www/websites/<URL_GAMES_PROTO>;
+      }
+    }
+    # PROD
     server {
       listen      443 ssl;
       server_name <URL_GAMES>;
