@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 5,
+  "id": 10,
   "links": [],
   "panels": [
     {
@@ -180,7 +180,7 @@
       "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "sum(process_resident_memory_bytes{app=\"api\"}) / sum(container_memory_working_set_bytes{namespace=\"singouins\"})*100",
+          "expr": "sum(process_resident_memory_bytes{app=\"api\"}) / sum(container_memory_working_set_bytes{namespace=\"singouins\",pod_name=~\"^sep-backend.*\",container_name!=\"\"})*100",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -291,27 +291,36 @@
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
-      },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
       },
       "gridPos": {
         "h": 3,
@@ -322,63 +331,35 @@
       "id": 26,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "name"
       },
-      "tableColumn": "28065c1",
+      "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "singouins_info{}",
+          "expr": "singouins_info{app=\"api\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "{{ commit }}",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "App Commit",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
-      "valueName": "name"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
@@ -449,7 +430,7 @@
       "tableColumn": "0.0.1",
       "targets": [
         {
-          "expr": "singouins_info{}",
+          "expr": "singouins_info{app=\"api\"}",
           "interval": "",
           "legendFormat": "{{ version }}",
           "refId": "A"
@@ -539,7 +520,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(flask_http_request_duration_seconds_count{status=\"200\",method=~\"GET|POST|DELETE\"}[30s])",
+          "expr": "rate(flask_http_request_duration_seconds_count{status=\"200\",method=~\"GET|POST|DELETE\",app=\"api\"}[30s])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -646,7 +627,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(flask_http_request_total[1m])",
+          "expr": "increase(flask_http_request_total{app=\"api\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -752,7 +733,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{status!~\"200|201\"}[30s]))",
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{status!~\"200|201\",app=\"api\"}[30s]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -860,19 +841,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"GET\"}[30s]))",
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"GET\",app=\"api\"}[30s]))",
           "interval": "",
           "legendFormat": "GET",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"POST\"}[30s]))",
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"POST\",app=\"api\"}[30s]))",
           "interval": "",
           "legendFormat": "POST",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"DELETE\"}[30s]))",
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"DELETE\",app=\"api\"}[30s]))",
           "interval": "",
           "legendFormat": "DELETE",
           "refId": "D"
@@ -974,7 +955,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(flask_http_request_duration_seconds_sum{status=\"200\"}[30s])\n/\nrate(flask_http_request_duration_seconds_count{status=\"200\"}[30s])",
+          "expr": "rate(flask_http_request_duration_seconds_sum{status=\"200\",app=\"api\"}[30s])\n/\nrate(flask_http_request_duration_seconds_count{status=\"200\",app=\"api\"}[30s])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1079,7 +1060,7 @@
       "steppedLine": true,
       "targets": [
         {
-          "expr": "100*(increase(flask_http_request_duration_seconds_bucket{status=\"200\",le=\"0.5\"}[30s]) \n/ ignoring (le) increase(flask_http_request_duration_seconds_count{status=\"200\"}[30s]))",
+          "expr": "100*(increase(flask_http_request_duration_seconds_bucket{status=\"200\",le=\"0.5\",app=\"api\"}[30s]) \n/ ignoring (le) increase(flask_http_request_duration_seconds_count{status=\"200\",app=\"api\"}[30s]))",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1186,7 +1167,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.5, rate(flask_http_request_duration_seconds_bucket{status=\"200\"}[30s]))",
+          "expr": "histogram_quantile(0.5, rate(flask_http_request_duration_seconds_bucket{status=\"200\",app=\"api\"}[30s]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1289,7 +1270,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.9, rate(flask_http_request_duration_seconds_bucket{status=\"200\"}[30s]))",
+          "expr": "histogram_quantile(0.9, rate(flask_http_request_duration_seconds_bucket{status=\"200\",app=\"api\"}[30s]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1350,7 +1331,7 @@
     "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -1378,7 +1359,7 @@
     ]
   },
   "timezone": "",
-  "title": "App | Flask (API) Dashboard",
-  "uid": "AqWXRFtGz",
-  "version": 2
+  "title": "App | Flask (API) Dashboard [PROD]",
+  "uid": "K5_HrxfMz",
+  "version": 4
 }
