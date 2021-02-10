@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: Always
         env:
           - name: BUILD_TYPE
-            value: ''
+            value: 'production'
           - name: GIT_REPO
             valueFrom:
               secretKeyRef:
