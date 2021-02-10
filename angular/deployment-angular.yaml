@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins
+  name: sep-backend-cronjob-angular
+  labels:
+    tier: sep-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular
+      tier: sep-backend
+  template:
+    metadata:
+      labels:
+        app: angular
+        tier: sep-backend
+    spec:
+      containers:
+      - name: sep-backend-angular
+        image: singouins/ng-cli:beta
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 10;done"]
+        env:
+          - name: BUILD_TYPE
+            value: ''
+          - name: GIT_REPO
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-angular-secret
+                key: gitrepo
+          - name: GIT_USER
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-angular-secret
+                key: gituser
+          - name: GIT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-angular-secret
+                key: gittoken
+          - name: QUIET
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-angular-secret
+                key: quiet
+          - name: OUTPUT_PATH
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-angular-secret
+                key: outputpathprod
+        volumeMounts:
+         - name: websites
+           mountPath: /websites
+
+      volumes:
+      - name: websites
+        persistentVolumeClaim:
+          claimName: sep-backend-code-websites

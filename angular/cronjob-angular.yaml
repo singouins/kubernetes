@@ -19,6 +19,8 @@ spec:
           - name: sep-backend-angular
             image: singouins/ng-cli:12
             env:
+              - name: BUILD_TYPE
+                value: 'proto'
               - name: GIT_REPO
                 valueFrom:
                   secretKeyRef:
