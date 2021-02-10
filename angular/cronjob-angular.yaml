@@ -18,6 +18,7 @@ spec:
           containers:
           - name: sep-backend-angular
             image: singouins/ng-cli:12
+            imagePullPolicy: Always
             env:
               - name: BUILD_TYPE
                 value: 'proto'

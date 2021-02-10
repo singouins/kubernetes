@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   namespace: singouins
-  name: sep-backend-cronjob-angular
+  name: sep-backend-angular
   labels:
     tier: sep-backend
 spec:
@@ -20,9 +20,10 @@ spec:
     spec:
       containers:
       - name: sep-backend-angular
-        image: singouins/ng-cli:beta
+        image: singouins/ng-cli:12
         command: ["/bin/sh"]
         args: ["-c", "while true; do echo hello; sleep 10;done"]
+        imagePullPolicy: Always
         env:
           - name: BUILD_TYPE
             value: ''
