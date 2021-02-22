@@ -134,6 +134,16 @@ spec:
             secretKeyRef:
               name: sep-backend-discord-secret
               key: invite-url
+        - name: SEP_LDP_HOST
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-api-secret
+              key: ldp-host
+        - name: SEP_LDP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-api-secret
+              key: ldp-token
         - name: DEBUG_METRICS
           value: 'true'
         volumeMounts:
