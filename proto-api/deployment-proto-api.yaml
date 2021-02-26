@@ -31,26 +31,27 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            memory: 128Mi
-            cpu: 250m
+            memory: 256Mi
+            cpu: 1000m
           requests:
-            memory: 64Mi
+            memory: 128Mi
             cpu: 50m
         env:
-        - name: FLASK_DEBUG
-          value: '--debugger'
-        - name: FLASK_PRODUCTION
-          value: 'false'
-        - name: FLASK_THREAD
-          value: '--without-threads'
+        #  Enable debug mode is set to 'development'
         - name: FLASK_ENV
           value: 'development'
-        - name: FLASK_APP
-          value: '/code/app.py'
-        - name: FLASK_HOST
+        # Gunicorn env vars
+        - name: GUNICORN_HOST
           value: '0.0.0.0'
-        - name: FLASK_PORT
+        - name: GUNICORN_PORT
           value: '5000'
+        - name: GUNICORN_WORKERS
+          value: '1'
+        - name: GUNICORN_THREADS
+          value: '2'
+        - name: GUNICORN_RELOAD
+          value: '--reload'
+        # App variables
         - name: SEP_API_URL
           valueFrom:
             secretKeyRef:
@@ -126,5 +127,3 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: ldp-token
-        - name: DEBUG_METRICS
-          value: 'true'
