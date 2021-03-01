@@ -23,52 +23,35 @@ spec:
         app: api
         tier: sep-backend
     spec:
-
-      initContainers:
-      - name: sep-backend-api-init
-        image: busybox
-        volumeMounts:
-        - name: code
-          mountPath: /code
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget   https://github.com/lordslair/sep-backend/archive/master.zip -O /tmp/sep.zip &&
-              wget -q https://api.github.com/repos/lordslair/sep-backend/commits/master -O - 2&>1 | grep '^  .sha' | cut -d'\"' -f4 > /code/.git &&
-              unzip  /tmp/sep.zip -d /tmp/ &&
-              cp -a  /tmp/sep-backend-master/api/* /code/ &&
-              rm -rf /tmp/sep-backend-master &&
-              rm -rf /tmp/sep.zip
-          ) || echo 1"
-        ]
+      restartPolicy: Always
 
       containers:
       - name: sep-backend-api
-        image: alpine:3.12
+        image: singouins/api:latest
+        imagePullPolicy: Always
         resources:
           limits:
             memory: 256Mi
-            cpu: 1000m
+            cpu: 500m
           requests:
             memory: 128Mi
             cpu: 50m
-        command: ["/code/entrypoint.sh"]
         env:
-        - name: FLASK_DEBUG
-          value: '--debugger'
-        - name: FLASK_PRODUCTION
-          value: 'true'
-        - name: FLASK_THREAD
-          value: '--without-threads'
+        #  Enable debug mode is set to 'development'
         - name: FLASK_ENV
-          value: 'development'
-        - name: FLASK_APP
-          value: '/code/app.py'
-        - name: FLASK_HOST
+          value: 'production'
+        # Gunicorn env vars
+        - name: GUNICORN_HOST
           value: '0.0.0.0'
-        - name: FLASK_PORT
+        - name: GUNICORN_PORT
           value: '5000'
+        - name: GUNICORN_WORKERS
+          value: '1'
+        - name: GUNICORN_THREADS
+          value: '2'
+        - name: GUNICORN_RELOAD
+          value: ''
+        # App variables
         - name: SEP_API_URL
           valueFrom:
             secretKeyRef:
@@ -144,14 +127,3 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: ldp-token
-        - name: DEBUG_METRICS
-          value: 'true'
-        volumeMounts:
-        - mountPath: /code
-          name: code
-      restartPolicy: Always
-
-      volumes:
-      - name: code
-        persistentVolumeClaim:
-          claimName: sep-backend-code-api
