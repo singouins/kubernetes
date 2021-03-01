@@ -249,7 +249,7 @@ data:
 
       location / {
         index                index.html;
-        root                 /var/www/websites/games.<SEP_DOMAIN>;
+        root                 /var/www/websites/games/games.<SEP_DOMAIN>;
       }
     }
     # PROTO
@@ -264,6 +264,6 @@ data:
 
       location / {
         index                index.html;
-        root                 /var/www/websites/proto-games.<SEP_DOMAIN>;
+        root                 /var/www/websites/games/proto-games.<SEP_DOMAIN>;
       }
     }
