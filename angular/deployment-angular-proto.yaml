@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   namespace: singouins
-  name: sep-backend-angular
+  name: sep-backend-angular-proto
   labels:
     tier: sep-backend
 spec:
@@ -19,14 +19,14 @@ spec:
         tier: sep-backend
     spec:
       containers:
-      - name: sep-backend-angular
+      - name: sep-backend-angular-proto
         image: singouins/ng-cli:12
         command: ["/bin/sh"]
-        args: ["-c", "while true; do echo hello; sleep 10;done"]
+        args: ["-c", "while true; do sleep 10;done"]
         imagePullPolicy: Always
         env:
           - name: BUILD_TYPE
-            value: 'production'
+            value: 'proto'
           - name: GIT_REPO
             valueFrom:
               secretKeyRef:
@@ -51,7 +51,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: sep-backend-angular-secret
-                key: outputpathprod
+                key: outputpath
+          - name: OUTPUT_FOLDER
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-angular-secret
+                key: outputfolderproto
         volumeMounts:
          - name: websites
            mountPath: /websites

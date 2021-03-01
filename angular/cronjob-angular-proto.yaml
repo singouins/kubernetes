@@ -47,6 +47,11 @@ spec:
                   secretKeyRef:
                     name: sep-backend-angular-secret
                     key: outputpath
+              - name: OUTPUT_FOLDER
+                valueFrom:
+                  secretKeyRef:
+                    name: sep-backend-angular-secret
+                    key: outputfolderproto
             volumeMounts:
              - name: websites
                mountPath: /websites
