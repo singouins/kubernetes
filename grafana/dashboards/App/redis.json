@@ -562,16 +562,17 @@
       "id": 7,
       "isNew": true,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
         "hideEmpty": false,
-        "hideZero": false,
+        "hideZero": true,
         "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 2,
@@ -679,14 +680,15 @@
       "id": 10,
       "isNew": true,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
         "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 2,
@@ -707,7 +709,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ input }}",
+          "legendFormat": "{{ instance }}",
           "refId": "A",
           "step": 240
         },
@@ -716,7 +718,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{ output }}",
+          "legendFormat": "{{ instance }}",
           "refId": "B",
           "step": 240
         }
@@ -896,14 +898,15 @@
       "id": 13,
       "isNew": true,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
         "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 2,
@@ -1014,14 +1017,15 @@
       "id": 8,
       "isNew": true,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
         "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 2,
@@ -1134,14 +1138,19 @@
       "id": 14,
       "isNew": true,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
         "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
+        "sort": "current",
+        "sortDesc": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1249,8 +1258,8 @@
     ]
   },
   "time": {
-    "from": "2021-03-04T17:47:48.411Z",
-    "to": "2021-03-04T18:42:51.940Z"
+    "from": "2021-03-04T18:36:06.292Z",
+    "to": "2021-03-04T18:42:10.263Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1279,5 +1288,5 @@
   "timezone": "browser",
   "title": "App | Redis Dashboard",
   "uid": "8v-BZdRGk",
-  "version": 2
+  "version": 3
 }
