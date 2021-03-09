@@ -27,7 +27,7 @@ spec:
 
       containers:
       - name: sep-backend-proto-api
-        image: singouins/api:latest
+        image: singouins/api:proto
         imagePullPolicy: Always
         resources:
           limits:
