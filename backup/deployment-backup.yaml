@@ -24,7 +24,7 @@ spec:
 
       containers:
       - name: sep-backend-backup
-        image: lordslair/easydbbackup:1.2.0
+        image: lordslair/easydbbackup:latest
         imagePullPolicy: Always
         resources:
           limits:
@@ -34,31 +34,6 @@ spec:
             memory: 16Mi
             cpu: 10m
         env:
-          - name: DB_LIST
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-backup-secret
-                key: dblist
-          - name: DB_HOST
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-backup-secret
-                key: dbhost
-          - name: DB_PORT
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-mariadb-secret
-                key: port
-          - name: DB_PASS
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-mariadb-secret
-                key: pass
-          - name: DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-mariadb-secret
-                key: user
           - name: RCLONE_CONFIG_PCS_TYPE
             valueFrom:
               secretKeyRef:
@@ -114,3 +89,52 @@ spec:
               secretKeyRef:
                 name: sep-backend-backup-secret
                 key: pcsdir
+
+          # MYSQL specifics
+          - name: MYSQL_DUMP
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-backup-secret
+                key: mysql-dump
+          - name: MYSQL_DB_LIST
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-backup-secret
+                key: mysql-dblist
+          - name: MYSQL_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-backup-secret
+                key: mysql-dbhost
+          - name: MYSQL_DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-mariadb-secret
+                key: port
+          - name: MYSQL_DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-mariadb-secret
+                key: pass
+          - name: MYSQL_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-mariadb-secret
+                key: user
+
+          # REDIS specifics
+          - name: REDIS_DUMP
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-backup-secret
+                key: redis-dump
+          - name: REDIS_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-redis-secret
+                key: redis-host
+          - name: REDIS_DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-redis-secret
+                key: redis-port
