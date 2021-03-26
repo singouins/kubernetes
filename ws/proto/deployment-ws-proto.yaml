@@ -37,7 +37,7 @@ spec:
             memory: 32Mi
             cpu: 50m
         env:
-        # WebService env vars
+        # WebSocket env vars
         - name: SEP_WSS_HOST
           value: '0.0.0.0'
         - name: SEP_WSS_PORT
@@ -46,6 +46,6 @@ spec:
           value: 'True'
         # App variables
         - name: SEP_REDIS_DB
-          value: '1'
+          value: '1' # 1: Prototype | 0: Production
         - name: SEP_REDIS_SLEEP
           value: '1'

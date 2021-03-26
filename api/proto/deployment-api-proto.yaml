@@ -52,6 +52,8 @@ spec:
         - name: GUNICORN_RELOAD
           value: '--reload'
         # App variables
+        - name: SEP_REDIS_DB
+          value: '1' # 1: Prototype | 0: Production
         - name: SEP_API_URL
           valueFrom:
             secretKeyRef:
