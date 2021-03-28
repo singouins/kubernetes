@@ -64,6 +64,7 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: jwt-secret
+        # MySQL variables
         - name: SEP_MYSQL_USER
           valueFrom:
             secretKeyRef:
@@ -82,8 +83,9 @@ spec:
         - name: SEP_MYSQL_HOST
           valueFrom:
             secretKeyRef:
-              name: sep-backend-backup-secret
-              key: dbhost
+              name: sep-backend-mariadb-secret
+              key: host
+        # SMTP variables
         - name: SEP_SMTP_FROM
           valueFrom:
             secretKeyRef:
@@ -109,16 +111,19 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: smtp-host
+        # PCS variables
         - name: SEP_PCS_URL
           valueFrom:
             secretKeyRef:
               name: sep-backend-api-secret
               key: pcs-url
+        # Discord variables
         - name: SEP_DISCORD_URL
           valueFrom:
             secretKeyRef:
               name: sep-backend-discord-secret
               key: invite-url
+        # LDP variables
         - name: SEP_LDP_HOST
           valueFrom:
             secretKeyRef:
