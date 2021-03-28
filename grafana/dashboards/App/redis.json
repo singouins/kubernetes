@@ -17,7 +17,7 @@
   "gnetId": 763,
   "graphTooltip": 0,
   "id": 9,
-  "iteration": 1614883752192,
+  "iteration": 1616947066839,
   "links": [],
   "panels": [
     {
@@ -577,7 +577,7 @@
       "lines": true,
       "linewidth": 2,
       "links": [],
-      "nullPointMode": "null as zero",
+      "nullPointMode": "connected",
       "percentage": false,
       "pluginVersion": "7.1.1",
       "pointradius": 5,
@@ -796,6 +796,8 @@
         "alignAsTable": true,
         "avg": false,
         "current": true,
+        "hideEmpty": false,
+        "hideZero": true,
         "max": false,
         "min": false,
         "rightSide": true,
@@ -923,16 +925,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (redis_db_keys{instance=~\"$instance\"}) - sum (redis_db_keys_expiring{instance=~\"$instance\"}) ",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "not expiring",
-          "refId": "A",
-          "step": 240,
-          "target": ""
-        },
-        {
           "expr": "sum (redis_db_keys_expiring{instance=~\"$instance\"}) ",
           "format": "time_series",
           "interval": "",
@@ -941,6 +933,16 @@
           "metric": "",
           "refId": "B",
           "step": 240
+        },
+        {
+          "expr": "sum (redis_db_keys{instance=~\"$instance\"}) - sum (redis_db_keys_expiring{instance=~\"$instance\"}) ",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "not expiring",
+          "refId": "A",
+          "step": 240,
+          "target": ""
         }
       ],
       "thresholds": [],
@@ -1258,8 +1260,8 @@
     ]
   },
   "time": {
-    "from": "2021-03-04T18:36:06.292Z",
-    "to": "2021-03-04T18:42:10.263Z"
+    "from": "now-3h",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1288,5 +1290,5 @@
   "timezone": "browser",
   "title": "App | Redis Dashboard",
   "uid": "8v-BZdRGk",
-  "version": 3
+  "version": 5
 }
