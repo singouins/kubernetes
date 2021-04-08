@@ -34,6 +34,20 @@ spec:
             memory: 64Mi
             cpu: 10m
         env:
+        # Discord env vars
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: token
+        # MySQL variables
+        - name: SEP_MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-mariadb-secret
+              key: host
+        - name: SEP_MYSQL_DB
+          value: 'proto' # proto: Prototype | sep: Production
         - name: SEP_MYSQL_USER
           valueFrom:
             secretKeyRef:
@@ -44,21 +58,16 @@ spec:
             secretKeyRef:
               name: sep-backend-discord-secret
               key: sql-pass
-        - name: SEP_MYSQL_DB
+        # PCS variables
+        - name: SEP_PCS_URL
           valueFrom:
             secretKeyRef:
-              name: sep-backend-discord-secret
-              key: sql-db
-        - name: SEP_MYSQL_HOST
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-discord-secret
-              key: sql-host
-        - name: TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-discord-secret
-              key: token
+              name: sep-backend-pcs-secret
+              key: pcs-url-public
+        # Redis variables
+        - name: SEP_REDIS_DB
+          value: '1' # 1: Prototype | 0: Production
+        # Other env vars
         - name: PYTHONUNBUFFERED
           value: 'True'
         - name: PYTHONIOENCODING
