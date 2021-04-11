@@ -104,8 +104,8 @@ spec:
           - name: MYSQL_DB_HOST
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: mysql-dbhost
+                name: sep-backend-mariadb-secret
+                key: host
           - name: MYSQL_DB_PORT
             valueFrom:
               secretKeyRef:
