@@ -3,14 +3,14 @@ kind: Deployment
 
 metadata:
   namespace: singouins
-  name: sep-backend-ws-proto
+  name: sep-backend-ws
   labels:
     tier: sep-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ws-proto
+      app: ws
       tier: sep-backend
   strategy:
     type: Recreate
@@ -20,13 +20,13 @@ spec:
         prometheus.io/scrape: "false"
         prometheus.io/port: "5000"
       labels:
-        app: ws-proto
+        app: ws
         tier: sep-backend
     spec:
       restartPolicy: Always
 
       containers:
-      - name: sep-backend-ws-proto
+      - name: sep-backend-ws
         image: singouins/ws:alpha
         imagePullPolicy: Always
         resources:
@@ -46,6 +46,6 @@ spec:
           value: 'True'
         # App variables
         - name: SEP_REDIS_DB
-          value: '1' # 1: Prototype | 0: Production
+          value: '0' # 1: Prototype | 0: Production
         - name: SEP_REDIS_SLEEP
           value: '1'
