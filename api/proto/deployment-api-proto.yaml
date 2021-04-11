@@ -115,8 +115,8 @@ spec:
         - name: SEP_PCS_URL
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
-              key: pcs-url
+              name: sep-backend-pcs-secret
+              key: pcs-url-public
         # Discord variables
         - name: SEP_DISCORD_URL
           valueFrom:

@@ -107,11 +107,12 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: smtp-host
+        # PCS variables
         - name: SEP_PCS_URL
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
-              key: pcs-url
+              name: sep-backend-pcs-secret
+              key: pcs-url-public
         - name: SEP_DISCORD_URL
           valueFrom:
             secretKeyRef:
