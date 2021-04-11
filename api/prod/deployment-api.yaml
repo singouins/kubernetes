@@ -85,27 +85,27 @@ spec:
         - name: SEP_SMTP_FROM
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-smtp-secret
               key: smtp-from
         - name: SEP_SMTP_SERVER
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-smtp-secret
               key: smtp-server
         - name: SEP_SMTP_USER
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-smtp-secret
               key: smtp-user
         - name: SEP_SMTP_PASS
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-smtp-secret
               key: smtp-pass
         - name: SEP_SMTP_HOSTNAME
           valueFrom:
             secretKeyRef:
-              name: sep-backend-api-secret
+              name: sep-backend-smtp-secret
               key: smtp-host
         # PCS variables
         - name: SEP_PCS_URL
