@@ -8,7 +8,7 @@ metadata:
     tier: sep-backend
 spec:
   selector:
-    app: ws-proto
+    app: ws
     tier: sep-backend
   ports:
   - protocol: TCP
