@@ -24,7 +24,7 @@ spec:
 
       containers:
       - name: sep-backend-discord
-        image: singouins/discord:alpha
+        image: singouins/discord:latest
         imagePullPolicy: Always
         resources:
           limits:
