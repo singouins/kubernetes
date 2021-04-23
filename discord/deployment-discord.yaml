@@ -51,24 +51,6 @@ spec:
             secretKeyRef:
               name: sep-backend-discord-secret
               key: admin-token
-        # MySQL variables
-        - name: SEP_MYSQL_HOST
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-mariadb-secret
-              key: host
-        - name: SEP_MYSQL_DB
-          value: 'sep_prod' # 'sep_proto': Prototype | 'sep_prod': Production
-        - name: SEP_MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-discord-secret
-              key: sql-user
-        - name: SEP_MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-discord-secret
-              key: sql-pass
         # PCS variables
         - name: SEP_PCS_URL
           valueFrom:
