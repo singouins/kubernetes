@@ -48,4 +48,4 @@ spec:
         - name: SEP_REDIS_DB
           value: '0' # 1: Prototype | 0: Production
         - name: SEP_REDIS_SLEEP
-          value: '1'
+          value: '0.1'
