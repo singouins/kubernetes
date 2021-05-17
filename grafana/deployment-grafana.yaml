@@ -20,7 +20,7 @@ spec:
     spec:
 
       containers:
-        - name: grafana
+        - name: sep-backend-grafana
           image: grafana/grafana:7.1.1
           resources:
             limits:
