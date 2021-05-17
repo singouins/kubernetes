@@ -17,7 +17,7 @@
   "gnetId": 10000,
   "graphTooltip": 0,
   "id": 3,
-  "iteration": 1603482036534,
+  "iteration": 1621258123166,
   "links": [],
   "panels": [
     {
@@ -92,7 +92,7 @@
       "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "sum (rate(container_cpu_usage_seconds_total{namespace=\"singouins\",kubernetes_io_hostname=~\"^$Node$\"}[$interval]))",
+          "expr": "sum (rate(container_cpu_usage_seconds_total{namespace=\"singouins\",pod_name=~\"^sep-backend.*\",container_name!=\"\"}[$interval]))",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -168,7 +168,7 @@
       "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "sum (rate(container_cpu_usage_seconds_total{namespace=\"singouins\",kubernetes_io_hostname=~\"^$Node$\"}[$interval])) / sum (machine_cpu_cores{kubernetes_io_hostname=~\"^$Node$\"}) * 100",
+          "expr": "sum (rate(container_cpu_usage_seconds_total{namespace=\"singouins\",pod_name=~\"^sep-backend.*\",container_name!=\"\"}[$interval])) / sum (machine_cpu_cores{kubernetes_io_hostname=~\"^$Node$\"}) * 100",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -242,7 +242,7 @@
       "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "sum (container_memory_working_set_bytes{namespace=\"singouins\",kubernetes_io_hostname=~\"^$Node$\"}) / sum (machine_memory_bytes{kubernetes_io_hostname=~\"^$Node$\"}) * 100",
+          "expr": "sum (container_memory_working_set_bytes{namespace=\"singouins\",pod_name=~\"^sep-backend.*\",container_name!=\"\"}) / sum (machine_memory_bytes{kubernetes_io_hostname=~\"^$Node$\"}) * 100",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -311,7 +311,7 @@
       "pluginVersion": "7.1.1",
       "targets": [
         {
-          "expr": "sum (container_memory_working_set_bytes{namespace=\"singouins\",kubernetes_io_hostname=~\"^$Node$\"})",
+          "expr": "sum (container_memory_working_set_bytes{namespace=\"singouins\",pod_name=~\"^sep-backend.*\",container_name!=\"\"})",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -513,8 +513,8 @@
         "rightSide": true,
         "show": true,
         "sideWidth": null,
-        "sort": "current",
-        "sortDesc": true,
+        "sort": "avg",
+        "sortDesc": false,
         "total": false,
         "values": true
       },
@@ -529,11 +529,11 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (container_memory_working_set_bytes{namespace=\"singouins\",image!=\"\",name=~\"^k8s_.*\",kubernetes_io_hostname=~\"^$Node$\"}) by (container_name)",
+          "expr": "sum (container_memory_working_set_bytes{namespace=\"singouins\",container=~\"^sep-backend.*\"}) by (container_name)",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -552,7 +552,7 @@
         "msResolution": false,
         "shared": true,
         "sort": 2,
-        "value_type": "cumulative"
+        "value_type": "individual"
       },
       "type": "graph",
       "xaxis": {
@@ -623,7 +623,7 @@
         "rightSide": true,
         "show": true,
         "sort": "avg",
-        "sortDesc": true,
+        "sortDesc": false,
         "total": false,
         "values": true
       },
@@ -638,7 +638,7 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
@@ -660,7 +660,7 @@
       "tooltip": {
         "msResolution": true,
         "shared": true,
-        "sort": 1,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -991,5 +991,5 @@
   "timezone": "browser",
   "title": "K8s | Singouins",
   "uid": "N6irFcgGz",
-  "version": 3
+  "version": 7
 }
