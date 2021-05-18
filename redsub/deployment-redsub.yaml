@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins
+  name: sep-backend-redis-sub
+  labels:
+    tier: sep-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-sub
+      tier: sep-backend
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "false"
+        prometheus.io/port: "5000"
+      labels:
+        app: redis-sub
+        tier: sep-backend
+    spec:
+
+      containers:
+      - name: sep-backend-redis-sub-proto
+        image: singouins/redsub:latest
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 20m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        env:
+        # Redis variables
+        - name: SEP_REDIS_DB
+          value: '1' # 1: Prototype | 0: Production
+        - name: SEP_REDIS_SUB_PATH
+          value: '*'
+        - name: SEP_REDIS_SUB_VERBOSE
+          value: 'True'
+        # Other env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+      - name: sep-backend-redis-sub
+        image: singouins/redsub:latest
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 20m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        env:
+        # Redis variables
+        - name: SEP_REDIS_DB
+          value: '0' # 1: Prototype | 0: Production
+        - name: SEP_REDIS_SUB_PATH
+          value: '*'
+        - name: SEP_REDIS_SUB_VERBOSE
+          value: 'False'
+        # Other env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
