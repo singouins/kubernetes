@@ -3,12 +3,12 @@ kind: Service
 
 metadata:
   namespace: singouins
-  name: sep-backend-proto-api-svc
+  name: sep-backend-api-proto-svc
   labels:
     tier: sep-backend
 spec:
   selector:
-    app: proto-api
+    app: api-proto
     tier: sep-backend
   ports:
   - protocol: TCP

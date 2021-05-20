@@ -3,14 +3,14 @@ kind: Deployment
 
 metadata:
   namespace: singouins
-  name: sep-backend-proto-api
+  name: sep-backend-api-proto
   labels:
     tier: sep-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: proto-api
+      app: api-proto
       tier: sep-backend
   strategy:
     type: Recreate
@@ -20,14 +20,14 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "5000"
       labels:
-        app: proto-api
+        app: api-proto
         tier: sep-backend
     spec:
       restartPolicy: Always
 
       containers:
-      - name: sep-backend-proto-api
         image: singouins/api:alpha
+      - name: sep-backend-api-proto
         imagePullPolicy: Always
         resources:
           limits:
@@ -62,28 +62,28 @@ spec:
         - name: SEP_API_URL
           valueFrom:
             secretKeyRef:
-              name: sep-backend-proto-api-secret
+              name: sep-backend-api-proto-secret
               key: api-url
         - name: SEP_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: sep-backend-proto-api-secret
+              name: sep-backend-api-proto-secret
               key: jwt-secret
         # MySQL variables
         - name: SEP_MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: sep-backend-proto-api-secret
+              name: sep-backend-api-proto-secret
               key: sql-user
         - name: SEP_MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: sep-backend-proto-api-secret
+              name: sep-backend-api-proto-secret
               key: sql-pass
         - name: SEP_MYSQL_DB
           valueFrom:
             secretKeyRef:
-              name: sep-backend-proto-api-secret
+              name: sep-backend-api-proto-secret
               key: sql-db
         - name: SEP_MYSQL_HOST
           valueFrom:
