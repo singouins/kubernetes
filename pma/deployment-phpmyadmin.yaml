@@ -33,8 +33,8 @@ spec:
             - name: PMA_HOST
               valueFrom:
                 secretKeyRef:
-                  name: sep-backend-backup-secret
-                  key: dbhost
+                  name: sep-backend-mariadb-secret
+                  key: host
             - name: PMA_PORT
               valueFrom:
                 secretKeyRef:
