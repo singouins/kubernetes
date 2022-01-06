@@ -27,7 +27,7 @@ spec:
 
       containers:
       - name: sep-backend-ws
-        image: singouins/ws:alpha
+        image: singouins/ws:latest
         imagePullPolicy: Always
         resources:
           limits:
@@ -51,4 +51,4 @@ spec:
               name: sep-backend-redis-secret
               key: redis-base
         - name: SEP_REDIS_SLEEP
-          value: '0.1'
+          value: '1.0'
