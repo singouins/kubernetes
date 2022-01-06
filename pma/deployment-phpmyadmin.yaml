@@ -40,3 +40,8 @@ spec:
                 secretKeyRef:
                   name: sep-backend-mariadb-secret
                   key: mariadb-port
+            # App variables
+            - name: MEMORY_LIMIT
+              value: '128M'
+            - name: UPLOAD_LIMIT
+              value: '50M'
