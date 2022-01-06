@@ -74,7 +74,6 @@ spec:
         image: singouins/discord:latest
         imagePullPolicy: Always
         command: ["/code/hapi.py"]
-#        args: ["-c", "while :; do sleep 10h; done;"]
         resources:
           limits:
             memory: 64Mi
