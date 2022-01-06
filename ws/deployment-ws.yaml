@@ -46,6 +46,9 @@ spec:
           value: 'True'
         # App variables
         - name: SEP_REDIS_DB
-          value: '0' # 1: Prototype | 0: Production
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-base
         - name: SEP_REDIS_SLEEP
           value: '0.1'

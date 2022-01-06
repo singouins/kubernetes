@@ -37,7 +37,10 @@ spec:
         # redis-cli> CONFIG SET notify-keyspace-events s$xE
         # Redis variables
         - name: SEP_REDIS_DB
-          value: '0' # 1: Prototype | 0: Production
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-base
         - name: SEP_REDIS_SUB_PATH
           value: '*'
         - name: SEP_REDIS_SUB_VERBOSE
