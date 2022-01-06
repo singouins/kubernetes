@@ -23,28 +23,6 @@ spec:
     spec:
 
       containers:
-      - name: sep-backend-redis-sub-proto
-        image: singouins/redsub:latest
-        resources:
-          limits:
-            memory: 32Mi
-            cpu: 20m
-          requests:
-            memory: 16Mi
-            cpu: 10m
-        env:
-        # Redis variables
-        - name: SEP_REDIS_DB
-          value: '1' # 1: Prototype | 0: Production
-        - name: SEP_REDIS_SUB_PATH
-          value: '*'
-        - name: SEP_REDIS_SUB_VERBOSE
-          value: 'True'
-        # Other env vars
-        - name: PYTHONUNBUFFERED
-          value: 'True'
-        - name: PYTHONIOENCODING
-          value: 'UTF-8'
       - name: sep-backend-redis-sub
         image: singouins/redsub:latest
         resources:
@@ -55,6 +33,8 @@ spec:
             memory: 16Mi
             cpu: 10m
         env:
+        # Reminder, Redis needs to be set with, at minimum :
+        # redis-cli> CONFIG SET notify-keyspace-events s$xE
         # Redis variables
         - name: SEP_REDIS_DB
           value: '0' # 1: Prototype | 0: Production
