@@ -76,7 +76,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sep-backend-api-secret
-              key: sql-db
+              key: sql-user
         - name: SEP_MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -86,7 +86,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sep-backend-api-secret
-              key: sql-db
+              key: sql-base
         - name: SEP_MYSQL_HOST
           valueFrom:
             secretKeyRef:
