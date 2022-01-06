@@ -91,7 +91,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sep-backend-mariadb-secret
-              key: host
+              key: mariadb-host
         # SMTP variables
         - name: SEP_SMTP_FROM
           valueFrom:

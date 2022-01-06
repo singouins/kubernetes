@@ -40,13 +40,13 @@ spec:
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
-              name: sep-backend-wikijs-secret
-              key: dbhost
+              name: sep-backend-mariadb-secret
+              key: mariadb-host
         - name: DB_PORT
           valueFrom:
             secretKeyRef:
               name: sep-backend-mariadb-secret
-              key: port
+              key: mariadb-port
         - name: DB_USER
           valueFrom:
             secretKeyRef:

@@ -34,14 +34,9 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: sep-backend-mariadb-secret
-                  key: host
+                  key: mariadb-host
             - name: PMA_PORT
               valueFrom:
                 secretKeyRef:
                   name: sep-backend-mariadb-secret
-                  key: port
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: sep-backend-mariadb-secret
-                  key: pass
+                  key: mariadb-port

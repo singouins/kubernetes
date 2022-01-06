@@ -105,22 +105,22 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: sep-backend-mariadb-secret
-                key: host
+                key: mariadb-host
           - name: MYSQL_DB_PORT
             valueFrom:
               secretKeyRef:
                 name: sep-backend-mariadb-secret
-                key: port
+                key: mariadb-port
           - name: MYSQL_DB_PASS
             valueFrom:
               secretKeyRef:
                 name: sep-backend-mariadb-secret
-                key: pass
+                key: mariadb-pass
           - name: MYSQL_DB_USER
             valueFrom:
               secretKeyRef:
                 name: sep-backend-mariadb-secret
-                key: user
+                key: mariadb-user
 
           # REDIS specifics
           - name: REDIS_DUMP
