@@ -8,14 +8,20 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 2,
+  "id": 1,
   "links": [
     {
       "icon": "info",
@@ -35,6 +41,7 @@
       "url": "http://prometheus.io/docs/introduction/overview/"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
       "aliasColors": {
@@ -44,12 +51,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -78,8 +83,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -89,7 +97,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(prometheus_tsdb_head_samples_appended_total{job=\"prometheus\"}[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "sum(irate(prometheus_tsdb_head_samples_appended_total{job=\"kubernetes-service-endpoints\"}[5m]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -101,9 +114,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Samples Appended",
       "tooltip": {
         "shared": true,
@@ -112,9 +123,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -122,21 +131,17 @@
         {
           "format": "short",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -144,12 +149,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "0zDOyUA7k"
+      },
       "editable": true,
       "error": false,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -178,8 +185,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -200,9 +210,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Scrape Duration",
       "tooltip": {
         "shared": true,
@@ -211,9 +219,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -221,21 +227,16 @@
         {
           "format": "s",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -243,11 +244,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -275,8 +274,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -286,7 +288,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(process_resident_memory_bytes{job=\"prometheus\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "sum(process_resident_memory_bytes{job=\"kubernetes-service-endpoints\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -296,9 +303,15 @@
           "step": 20
         },
         {
-          "expr": "process_virtual_memory_bytes{job=\"prometheus\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "process_virtual_memory_bytes{job=\"kubernetes-service-endpoints\"}",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "virtual memory",
           "refId": "C",
@@ -306,9 +319,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Memory Profile",
       "tooltip": {
         "shared": true,
@@ -317,9 +328,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -328,47 +337,55 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
-      "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "rgba(50, 172, 45, 0.97)",
-        "rgba(237, 129, 40, 0.89)",
-        "rgba(245, 54, 54, 0.9)"
-      ],
-      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "text": "None"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgba(50, 172, 45, 0.97)",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 0.1
+              },
+              {
+                "color": "rgba(245, 54, 54, 0.9)",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
-      },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
       },
       "gridPos": {
         "h": 6,
@@ -377,72 +394,49 @@
         "y": 0
       },
       "id": 37,
-      "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "max"
+          ],
+          "fields": "/^prometheus_tsdb_wal_corruptions_total{instance=\"10.2.0.10:9090\", job=\"prometheus\", kubernetes_namespace=\"lens-metrics\", kubernetes_node=\"ferengi\"}$/",
+          "values": false
+        },
+        "textMode": "auto"
       },
-      "tableColumn": "prometheus_tsdb_wal_corruptions_total{instance=\"10.2.0.10:9090\", job=\"prometheus\", kubernetes_namespace=\"lens-metrics\", kubernetes_node=\"ferengi\"}",
+      "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "prometheus_tsdb_wal_corruptions_total{job=\"prometheus\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "prometheus_tsdb_wal_corruptions_total{job=\"kubernetes-service-endpoints\"}",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
           "step": 60
         }
       ],
-      "thresholds": "0.1,1",
       "title": "WAL Corruptions",
-      "type": "singlestat",
-      "valueFontSize": "200%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "None",
-          "value": "0"
-        }
-      ],
-      "valueName": "max"
+      "type": "stat"
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -470,8 +464,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -481,7 +478,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(prometheus_tsdb_head_active_appenders{job=\"prometheus\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "sum(prometheus_tsdb_head_active_appenders{job=\"kubernetes-service-endpoints\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -491,7 +493,12 @@
           "step": 20
         },
         {
-          "expr": "sum(process_open_fds{job=\"prometheus\"})",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "sum(process_open_fds{job=\"kubernetes-service-endpoints\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -501,9 +508,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Active Appenders",
       "tooltip": {
         "shared": true,
@@ -512,33 +517,24 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -549,12 +545,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -583,8 +577,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -594,8 +591,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "prometheus_tsdb_blocks_loaded{job=\"prometheus\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "prometheus_tsdb_blocks_loaded{job=\"kubernetes-service-endpoints\"}",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "blocks",
           "refId": "A",
@@ -603,9 +606,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Blocks Loaded",
       "tooltip": {
         "shared": true,
@@ -614,9 +615,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -624,21 +623,16 @@
         {
           "format": "short",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -646,12 +640,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": null,
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -679,8 +670,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -690,7 +684,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "prometheus_tsdb_head_chunks{job=\"prometheus\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "prometheus_tsdb_head_chunks{job=\"kubernetes-service-endpoints\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -700,9 +699,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Head Chunks",
       "tooltip": {
         "shared": true,
@@ -711,33 +708,25 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -745,10 +734,8 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -776,8 +763,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -792,16 +782,28 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "prometheus_tsdb_head_gc_duration_seconds{job=\"prometheus\",quantile=\"0.99\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "prometheus_tsdb_head_gc_duration_seconds{job=\"kubernetes-service-endpoints\",quantile=\"0.99\"}",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "duration-p99",
           "refId": "A",
           "step": 20
         },
         {
-          "expr": "irate(prometheus_tsdb_head_gc_duration_seconds_count{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "irate(prometheus_tsdb_head_gc_duration_seconds_count{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "collections",
           "refId": "B",
@@ -809,9 +811,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Head Block GC Activity",
       "tooltip": {
         "shared": true,
@@ -820,33 +820,26 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "s",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -854,12 +847,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": null,
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -887,8 +877,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -903,7 +896,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum(rate(prometheus_tsdb_compaction_duration_bucket{job=\"prometheus\"}[5m])) by (le))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "histogram_quantile(0.99, sum(rate(prometheus_tsdb_compaction_duration_bucket{job=\"kubernetes-service-endpoints\"}[5m])) by (le))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -913,22 +911,38 @@
           "step": 20
         },
         {
-          "expr": "irate(prometheus_tsdb_compactions_total{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "irate(prometheus_tsdb_compactions_total{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "compactions",
           "refId": "B",
           "step": 20
         },
         {
-          "expr": "irate(prometheus_tsdb_compactions_failed_total{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "irate(prometheus_tsdb_compactions_failed_total{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "failed",
           "refId": "C",
           "step": 20
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
           "expr": "irate(prometheus_tsdb_compactions_triggered_total{job=\"prometheus\"}[5m])",
           "format": "time_series",
           "intervalFactor": 2,
@@ -938,9 +952,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Compaction Activity",
       "tooltip": {
         "shared": true,
@@ -949,18 +961,14 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
@@ -968,14 +976,12 @@
           "format": "s",
           "label": "",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -983,10 +989,8 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -1014,8 +1018,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1025,17 +1032,29 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(prometheus_tsdb_reloads_total{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "rate(prometheus_tsdb_reloads_total{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "reloads",
           "refId": "A",
           "step": 20
         },
         {
-          "expr": "rate(prometheus_tsdb_reloads_failures_total{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "rate(prometheus_tsdb_reloads_failures_total{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
           "hide": false,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "failures",
           "refId": "B",
@@ -1043,9 +1062,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Reload Count",
       "tooltip": {
         "shared": true,
@@ -1054,33 +1071,24 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1088,10 +1096,8 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -1119,8 +1125,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1130,8 +1139,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "prometheus_engine_query_duration_seconds{job=\"prometheus\", quantile=\"0.99\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "prometheus_engine_query_duration_seconds{job=\"kubernetes-service-endpoints\", quantile=\"0.99\"}",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{slice}}_p99",
           "refId": "A",
@@ -1139,9 +1154,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Query Durations",
       "tooltip": {
         "shared": true,
@@ -1150,33 +1163,24 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1184,13 +1188,10 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": null,
       "editable": true,
       "error": false,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -1221,8 +1222,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1232,7 +1236,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(prometheus_rule_group_duration_seconds{job=\"prometheus\"}) by (quantile)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "max(prometheus_rule_group_duration_seconds{job=\"kubernetes-service-endpoints\"}) by (quantile)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1242,9 +1251,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Rule Group Eval Duration",
       "tooltip": {
         "shared": true,
@@ -1253,9 +1260,7 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1264,21 +1269,16 @@
           "format": "s",
           "label": "",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -1286,10 +1286,8 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
@@ -1317,8 +1315,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.1",
+      "pluginVersion": "8.3.3",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1328,16 +1329,28 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(prometheus_rule_group_iterations_missed_total{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "rate(prometheus_rule_group_iterations_missed_total{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "missed",
           "refId": "B",
           "step": 10
         },
         {
-          "expr": "rate(prometheus_rule_group_iterations_total{job=\"prometheus\"}[5m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "0zDOyUA7k"
+          },
+          "exemplar": true,
+          "expr": "rate(prometheus_rule_group_iterations_total{job=\"kubernetes-service-endpoints\"}[5m])",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "iterations",
           "refId": "A",
@@ -1345,9 +1358,7 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
       "timeRegions": [],
-      "timeShift": null,
       "title": "Rule Group Eval Activity",
       "tooltip": {
         "shared": true,
@@ -1356,39 +1367,30 @@
       },
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     }
   ],
   "refresh": "1m",
   "revision": "1.0",
-  "schemaVersion": 26,
+  "schemaVersion": 34,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1424,7 +1426,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "K8s | Prometheus Dashboard",
+  "title": "K8s | Prometheus",
   "uid": "cW95HcRMk",
-  "version": 2
+  "version": 5,
+  "weekStart": ""
 }
