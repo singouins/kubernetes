@@ -28,8 +28,6 @@ spec:
       containers:
       - name: sep-backend-api
         image: singouins/api:latest
-        command: ["/bin/sh"]
-        args: ["-c", "while :; do sleep 12h; done;"]
         imagePullPolicy: Always
         resources:
           limits:
