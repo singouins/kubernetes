@@ -27,6 +27,13 @@ spec:
       containers:
         - name: sep-backend-prometheus
           image: prom/prometheus:v2.32.0
+          resources:
+            limits:
+              memory: 1024Mi
+              cpu: 500m
+            requests:
+              memory: 512Mi
+              cpu: 200m
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
