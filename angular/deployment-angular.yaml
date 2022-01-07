@@ -18,12 +18,30 @@ spec:
         app: angular
         tier: sep-backend
     spec:
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - nodepool-b9ea22df-ec7f-4761-bc-node-fe0e74
+
       containers:
       - name: sep-backend-angular-prod
         image: singouins/ng-cli:12
         command: ["/bin/sh"]
         args: ["-c", "while true; do sleep 10;done"]
         imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 1024Mi
+            cpu: 1000m
+          requests:
+            memory: 128Mi
+            cpu: 50m
         env:
           - name: BUILD_TYPE
             value: 'production'
