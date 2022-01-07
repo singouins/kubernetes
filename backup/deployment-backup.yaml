@@ -37,58 +37,58 @@ spec:
           - name: RCLONE_CONFIG_PCS_TYPE
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcstype
+                name: sep-backend-pcs-secret
+                key: pcs-type
           - name: RCLONE_CONFIG_PCS_ENV_AUTH
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: pcsenvauth
+                key: pcs-env-auth
           - name: RCLONE_CONFIG_PCS_AUTH_VERSION
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcsauthversion
+                name: sep-backend-pcs-secret
+                key: pcs-auth-version
           - name: RCLONE_CONFIG_PCS_TENANT_DOMAIN
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcstenantdomain
+                name: sep-backend-pcs-secret
+                key: pcs-tenant-domain
           - name: RCLONE_CONFIG_PCS_DOMAIN
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcsdomain
+                name: sep-backend-pcs-secret
+                key: pcs-domain
           - name: RCLONE_CONFIG_PCS_AUTH
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcsauth
+                name: sep-backend-pcs-secret
+                key: pcs-auth
           - name: RCLONE_CONFIG_PCS_TENANT
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcstenant
+                name: sep-backend-pcs-secret
+                key: pcs-tenant
           - name: RCLONE_CONFIG_PCS_USER
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcsuser
+                name: sep-backend-pcs-secret
+                key: pcs-private-user
           - name: RCLONE_CONFIG_PCS_KEY
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcskey
+                name: sep-backend-pcs-secret
+                key: pcs-private-key
           - name: RCLONE_CONFIG_PCS_REGION
             valueFrom:
               secretKeyRef:
-                name: sep-backend-backup-secret
-                key: pcsregion
+                name: sep-backend-pcs-secret
+                key: pcs-region
           - name: RCLONE_CONFIG_PCS_DIR
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: pcsdir
+                key: pcs-dir
 
           # MYSQL specifics
           - name: MYSQL_DUMP

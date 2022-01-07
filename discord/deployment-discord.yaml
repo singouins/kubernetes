@@ -104,7 +104,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sep-backend-pcs-secret
-              key: pcs-url-public
+              key: pcs-public-url
         # Redis variables
         - name: SEP_REDIS_DB
           valueFrom:
