@@ -22,8 +22,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 9,
-  "iteration": 1641318186171,
+  "id": 13,
+  "iteration": 1641636012845,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -190,7 +190,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 4
+        "y": 10
       },
       "id": 10,
       "links": [],
@@ -291,7 +291,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 4
+        "y": 10
       },
       "id": 12,
       "links": [],
@@ -403,7 +403,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 18
       },
       "id": 15,
       "links": [],
@@ -448,7 +448,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 26
       },
       "id": 6,
       "panels": [],
@@ -475,7 +475,7 @@
           "type": "prometheus",
           "uid": "0zDOyUA7k"
         },
-        "definition": "label_values(nginx_up, instance)",
+        "definition": "label_values(nginx_up{kubernetes_namespace=\"singouins\"}, instance)",
         "hide": 0,
         "includeAll": true,
         "label": "",
@@ -483,8 +483,8 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(nginx_up, instance)",
-          "refId": "Prometheus-instance-Variable-Query"
+          "query": "label_values(nginx_up{kubernetes_namespace=\"singouins\"}, instance)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -529,6 +529,6 @@
   "timezone": "",
   "title": "App | Nginx Dashboard",
   "uid": "MsjffzSZz",
-  "version": 7,
+  "version": 2,
   "weekStart": ""
 }
