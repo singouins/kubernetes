@@ -10,7 +10,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      name: redis # For promtail logging
       tier: sep-backend
   strategy:
     type: Recreate
@@ -20,31 +20,48 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9121"
       labels:
-        app: redis
+        name: redis # For promtail logging
         tier: sep-backend
     spec:
       restartPolicy: Always
 
       containers:
       - name: sep-backend-redis
-        image: redis:6.0-alpine
+        image: redislabs/redisearch:2.6.0
+        command: ["redis-server", "/etc/redis/redis.conf"]
         resources:
           limits:
-            memory: 64Mi
-            cpu: 50m
+            memory: 128Mi
+            cpu: 100m
           requests:
             memory: 32Mi
-            cpu: 10m
+            cpu: 50m
         ports:
         - containerPort: 6379
-      - name: redis-exporter
-        image: oliver006/redis_exporter:v1.6.0
+        volumeMounts:
+        - name: db
+          mountPath: /data
+        - mountPath: /etc/redis
+          name: config
+      - name: sep-backend-redis-exporter
+        image: oliver006/redis_exporter:v1.33.0-alpine
         resources:
           limits:
             memory: 32Mi
-            cpu: 20m
+            cpu: 10m
           requests:
             memory: 16Mi
             cpu: 10m
         ports:
         - containerPort: 9121
+
+      volumes:
+      - name: db
+        persistentVolumeClaim:
+          claimName: sep-backend-redis-db
+      - name: config
+        configMap:
+          name: sep-backend-redis-conf
+          items:
+          - key: redis-conf
+            path: redis.conf
