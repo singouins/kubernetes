@@ -26,7 +26,7 @@ spec:
 
       containers:
       - name: sep-backend-nginx
-        image: nginx:1.18-alpine
+        image: nginx:1.23-alpine
         resources:
           requests:
             memory: 32Mi
