@@ -7,11 +7,12 @@ metadata:
   labels:
     tier: sep-backend
   annotations:
-    service.beta.kubernetes.io/ovh-loadbalancer-proxy-protocol: "v1"
+    service.beta.kubernetes.io/ovh-loadbalancer-proxy-protocol: "v2"
 spec:
+  externalTrafficPolicy: Local
   type: LoadBalancer
   selector:
-    app: nginx
+    name: nginx # For promtail logging
     tier: sep-backend
   ports:
   - port: 80
