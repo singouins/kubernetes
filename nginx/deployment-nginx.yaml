@@ -10,7 +10,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      name: nginx # For promtail logging
       tier: sep-backend
   strategy:
     type: Recreate
@@ -20,19 +20,9 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9113"
       labels:
-        app: nginx
+        name: nginx # For promtail logging
         tier: sep-backend
     spec:
-
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                    - nodepool-b9ea22df-ec7f-4761-bc-node-fe0e74
 
       containers:
       - name: sep-backend-nginx
@@ -92,7 +82,7 @@ spec:
             path: site.conf
       - name: htpasswd
         configMap:
-          name: sep-backend-nginx-htpasswd
+          name: sep-backend-nginx
           items:
           - key: htpasswd
             path: htpasswd
