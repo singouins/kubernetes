@@ -10,18 +10,26 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis-commander
+      name: redis-commander # For promtail logging
       tier: sep-backend
   template:
     metadata:
       labels:
-        app: redis-commander
+        name: redis-commander # For promtail logging
         tier: sep-backend
     spec:
 
       containers:
-      - name: redis-commander
+      - name: sep-backend-redis-commander
         image: rediscommander/redis-commander:latest
+        command: ["./bin/redis-commander.js"]
+        args:
+          - --redis-host=sep-backend-redis-svc
+          - --redis-port=6379
+          - --redis-db=0
+          - --redis-label=PROD
+          - --noload
+          - --nosave
         resources:
           limits:
             memory: 64Mi
@@ -29,11 +37,14 @@ spec:
           requests:
             memory: 32Mi
             cpu: 10m
-        env:
-        - name: REDIS_HOSTS
-          value: instance1:sep-backend-redis-svc:6379
-        - name: K8S_SIGTERM
-          value: '1'
+        # Network
         ports:
         - name: redis-commander
           containerPort: 8081
+        # Healthcheck
+        livenessProbe:
+            httpGet:
+              path: /favicon.png
+              port: 8081
+            initialDelaySeconds: 10
+            timeoutSeconds: 5

@@ -4,12 +4,12 @@ kind: Service
 metadata:
   namespace: singouins
   name: sep-backend-redis-commander-svc
-  labels:
-    tier: sep-backend
 spec:
   selector:
-    app: redis-commander
+    name: redis-commander # For promtail logging
     tier: sep-backend
   ports:
   - protocol: TCP
     port: 8081
+    targetPort: 8081
+    name: redis-commander
