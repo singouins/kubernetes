@@ -8,8 +8,10 @@ metadata:
     tier: sep-backend
 spec:
   selector:
-    app: prometheus-server
+    name: prometheus # For promtail logging
     tier: sep-backend
   ports:
   - protocol: TCP
     port: 9090
+    targetPort: 9090
+    name: default

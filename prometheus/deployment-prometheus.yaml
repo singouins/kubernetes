@@ -4,17 +4,23 @@ metadata:
   name: sep-backend-prometheus
   namespace: singouins
   labels:
-    app: prometheus-server
+    tier: sep-backend
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: prometheus-server
+      name: prometheus # For promtail logging
+      tier: sep-backend
   template:
     metadata:
       labels:
-        app: prometheus-server
+        name: prometheus # For promtail logging
+        tier: sep-backend
     spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
 
       initContainers:
       - name: sep-backend-prometheus-data-permission-setup
@@ -30,15 +36,16 @@ spec:
           resources:
             limits:
               memory: 1024Mi
-              cpu: 500m
+              cpu: 1000m
             requests:
               memory: 512Mi
-              cpu: 200m
+              cpu: 100m
           args:
+            - "--web.listen-address=:9090"
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
             - "--storage.tsdb.retention.size=450GB"
-            - "--storage.tsdb.retention.time=365d"
+#            - "--storage.tsdb.retention.time=365d"
           ports:
             - containerPort: 9090
           volumeMounts:
