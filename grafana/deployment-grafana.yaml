@@ -10,18 +10,18 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grafana
+      name: grafana # For promtail logging
       tier: sep-backend
   template:
     metadata:
       labels:
-        app: grafana
+        name: grafana # For promtail logging
         tier: sep-backend
     spec:
 
       containers:
         - name: sep-backend-grafana
-          image: grafana/grafana:8.3.3
+          image: grafana/grafana:8.4.1
           resources:
             limits:
               memory: 128Mi
@@ -29,3 +29,39 @@ spec:
             requests:
               memory: 32Mi
               cpu: 10m
+          env:
+            - name: GF_DATABASE_TYPE
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-db-type
+            - name: GF_DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-db-host
+            - name: GF_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-db-user
+            - name: GF_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-db-base
+            - name: GF_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-db-pass
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-admin-user
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-grafana-secret
+                  key: grafana-admin-pass

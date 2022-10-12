@@ -8,7 +8,7 @@ metadata:
     tier: sep-backend
 spec:
   selector:
-    app: grafana
+    name: grafana # For promtail logging
     tier: sep-backend
   ports:
   - protocol: TCP
