@@ -8,7 +8,7 @@ metadata:
     tier: sep-backend
 spec:
   selector:
-    app: phpmyadmin
+    name: phpmyadmin # For promtail logging
     tier: sep-backend
   ports:
   - protocol: TCP

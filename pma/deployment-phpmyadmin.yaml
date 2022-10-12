@@ -10,12 +10,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: phpmyadmin
+      name: phpmyadmin # For promtail logging
       tier: sep-backend
   template:
     metadata:
       labels:
-        app: phpmyadmin
+        name: phpmyadmin # For promtail logging
         tier: sep-backend
     spec:
 
