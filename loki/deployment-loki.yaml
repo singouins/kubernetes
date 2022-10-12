@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sep-backend-loki
+  namespace: singouins
+spec:
+  selector:
+    matchLabels:
+
+      name: loki # For promtail logging
+  template:
+    metadata:
+      labels:
+
+        name: loki # For promtail logging
+    spec:
+      initContainers:
+      - name: sep-backend-loki-data-permission-setup
+        image: busybox
+        command: ["/bin/chown","-R","10001:10001","/loki"]
+        volumeMounts:
+        - name: loki-storage-volume
+          mountPath: /loki
+
+      containers:
+      - name: sep-backend-loki
+        image: grafana/loki:2.4.1
+        args:
+        - -config.file=/etc/loki/local-config.yaml
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /etc/loki
+          name: config
+        - name: loki-storage-volume
+          mountPath: /loki
+        ports:
+        - containerPort: 3100
+
+      volumes:
+      - name: config
+        configMap:
+          name: sep-backend-loki-conf
+          items:
+          - key: loki-conf
+            path: local-config.yaml
+      - name: loki-storage-volume
+        persistentVolumeClaim:
+          claimName: sep-backend-loki
+---

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins
+  name: sep-backend-loki-svc
+spec:
+  selector:
+    name: loki # For promtail logging
+  ports:
+  - protocol: TCP
+    port: 3100
+    targetPort: 3100
+    name: loki-http
+  - protocol: TCP
+    port: 9096
+    targetPort: 9096
+    name: loki-grpc
