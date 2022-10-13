@@ -21,7 +21,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 15,
+  "id": 12,
+  "iteration": 1641991447414,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -39,7 +40,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -80,8 +81,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -114,7 +114,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "process_resident_memory_bytes{app=\"api\"}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "process_resident_memory_bytes{name=\"api\"}",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -127,7 +131,11 @@
       "type": "timeseries"
     },
     {
-      "description": "Flask API MEM Usage / ALL Pods MEM Usage",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "API MEM Usage / ALL MEM Usage",
       "fieldConfig": {
         "defaults": {
           "decimals": 1,
@@ -138,8 +146,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "#EAB839",
@@ -179,10 +186,10 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "G5jUSN1nz"
           },
           "exemplar": true,
-          "expr": "sum(process_resident_memory_bytes{app=\"api\",kubernetes_namespace=\"singouins\"}) / sum(container_memory_working_set_bytes{namespace=\"singouins\",pod=~\"^sep-backend.*\",container!=\"\"})*100",
+          "expr": "sum(process_resident_memory_bytes{name=\"api\",kubernetes_namespace=\"singouins\"}) / sum(container_memory_working_set_bytes{namespace=\"singouins\",pod=~\"^sep-backend.*\",container!=\"\"})*100",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -194,7 +201,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -236,8 +243,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -270,7 +276,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "rate(process_cpu_seconds_total{app=\"api\"}[30s])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(process_cpu_seconds_total{name=\"api\"}[30s])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -299,8 +309,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -338,7 +347,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "singouins_info{app=\"api\"}",
+          "expr": "singouins_info{name=\"api\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "{{ commit }}",
@@ -369,8 +378,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -408,7 +416,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "singouins_info{app=\"api\"}",
+          "expr": "singouins_info{name=\"api\"}",
           "interval": "",
           "legendFormat": "{{ version }}",
           "refId": "A"
@@ -433,7 +441,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -468,6 +476,7 @@
               "mode": "off"
             }
           },
+          "decimals": 3,
           "links": [],
           "mappings": [],
           "min": 0,
@@ -475,8 +484,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -512,7 +520,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "rate(flask_http_request_duration_seconds_count{status=\"200\",method=~\"GET|POST|DELETE\",app=\"api\"}[30s])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(flask_http_request_duration_seconds_count{status=\"200\",method=~\"GET|POST|DELETE\",name=\"api\"}[30s])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -526,7 +538,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -568,8 +580,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -621,7 +632,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "increase(flask_http_request_total{app=\"api\"}[1m])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "increase(flask_http_request_total{name=\"api\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -635,7 +650,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -677,8 +692,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -730,7 +744,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{status!~\"200|201\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{status!~\"200|201\",name=\"api\"}[30s]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -744,7 +762,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -780,6 +798,7 @@
               "mode": "off"
             }
           },
+          "decimals": 3,
           "links": [],
           "mappings": [],
           "min": 0,
@@ -787,8 +806,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -840,19 +858,31 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"GET\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"GET\",name=\"api\"}[30s]))",
           "interval": "",
           "legendFormat": "GET",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"POST\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"POST\",name=\"api\"}[30s]))",
           "interval": "",
           "legendFormat": "POST",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"DELETE\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "sum(rate(flask_http_request_duration_seconds_count{method=\"DELETE\",name=\"api\"}[30s]))",
           "interval": "",
           "legendFormat": "DELETE",
           "refId": "D"
@@ -864,7 +894,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -906,8 +936,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -943,7 +972,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "rate(flask_http_request_duration_seconds_sum{status=\"200\",app=\"api\"}[30s])\n/\nrate(flask_http_request_duration_seconds_count{status=\"200\",app=\"api\"}[30s])",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "rate(flask_http_request_duration_seconds_sum{status=\"200\",name=\"api\"}[30s])\n/\nrate(flask_http_request_duration_seconds_count{status=\"200\",name=\"api\"}[30s])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -957,7 +990,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1000,8 +1033,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1037,7 +1069,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "100*(increase(flask_http_request_duration_seconds_bucket{status=\"200\",le=\"0.5\",app=\"api\"}[30s]) \n/ ignoring (le) increase(flask_http_request_duration_seconds_count{status=\"200\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "100*(increase(flask_http_request_duration_seconds_bucket{status=\"200\",le=\"0.5\",name=\"api\"}[30s]) \n/ ignoring (le) increase(flask_http_request_duration_seconds_count{status=\"200\",name=\"api\"}[30s]))",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1052,7 +1088,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "",
       "fieldConfig": {
@@ -1095,8 +1131,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1132,7 +1167,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "histogram_quantile(0.5, rate(flask_http_request_duration_seconds_bucket{status=\"200\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "histogram_quantile(0.5, rate(flask_http_request_duration_seconds_bucket{status=\"200\",name=\"api\"}[30s]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1146,7 +1185,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1188,8 +1227,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1225,7 +1263,11 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "histogram_quantile(0.9, rate(flask_http_request_duration_seconds_bucket{status=\"200\",app=\"api\"}[30s]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "expr": "histogram_quantile(0.9, rate(flask_http_request_duration_seconds_bucket{status=\"200\",name=\"api\"}[30s]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1242,10 +1284,29 @@
   "style": "dark",
   "tags": [
     "Flask",
-    "prometheus"
+    "prometheus",
+    "singouins"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
   },
   "time": {
     "from": "now-5m",
@@ -1276,7 +1337,7 @@
     ]
   },
   "timezone": "",
-  "title": "App | Flask (API) Dashboard [PROD]",
+  "title": "App | Flask (API) Dashboard",
   "uid": "K5_HrxfMz",
   "version": 4,
   "weekStart": ""

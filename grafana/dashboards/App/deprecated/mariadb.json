@@ -30,8 +30,8 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 7362,
   "graphTooltip": 1,
-  "id": 14,
-  "iteration": 1641504833692,
+  "id": 13,
+  "iteration": 1642010598580,
   "links": [
     {
       "icon": "dashboard",
@@ -140,7 +140,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Uptime**\n\nThe amount of time since the last restart of the MySQL server process.",
       "fieldConfig": {
@@ -217,7 +217,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**Current QPS**\n\nBased on the queries reported by MySQL's ``SHOW STATUS`` command, it is the number of statements executed by the server within the last second. This variable includes statements executed within stored programs, unlike the Questions variable. It does not count \n``COM_PING`` or ``COM_STATISTICS`` commands.",
       "fieldConfig": {
@@ -301,7 +301,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**InnoDB Buffer Pool Size**\n\nInnoDB maintains a storage area called the buffer pool for caching data and indexes in memory.  Knowing how the InnoDB buffer pool works, and taking advantage of it to keep frequently accessed data in memory, is one of the most important aspects of MySQL tuning. The goal is to keep the working set in memory. In most cases, this should be between 60%-90% of available memory on a dedicated database host, but depends on many factors.",
       "fieldConfig": {
@@ -496,7 +496,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -514,7 +514,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -533,7 +533,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -694,7 +694,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -713,7 +713,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -730,7 +730,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "exemplar": true,
           "expr": "avg_over_time(mysql_global_status_threads_running{instance=\"$host\"}[$interval]) or \navg_over_time(mysql_global_status_threads_running{instance=\"$host\"}[5m])",
@@ -761,7 +761,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Questions**\n\nThe number of statements executed by the server. This includes only statements sent to the server by clients and not statements executed within stored programs, unlike the Queries used in the QPS calculation. \n\nThis variable does not count the following commands:\n* ``COM_PING``\n* ``COM_STATISTICS``\n* ``COM_STMT_PREPARE``\n* ``COM_STMT_CLOSE``\n* ``COM_STMT_RESET``",
       "fieldConfig": {
@@ -867,7 +867,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Thread Cache**\n\nThe thread_cache_size variable sets how many threads the server should cache to reuse. When a client disconnects, the client's threads are put in the cache if the cache is not full. It is autosized in MySQL 5.6.8 and above (capped to 100). Requests for threads are satisfied by reusing threads taken from the cache if possible, and only when the cache is empty is a new thread created.\n\n* *Threads_created*: The number of threads created to handle connections.\n* *Threads_cached*: The number of threads in the thread cache.",
       "fieldConfig": {
@@ -1024,7 +1024,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1146,7 +1146,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Select Types**\n\nAs with most relational databases, selecting based on indexes is more efficient than scanning an entire table's data. Here we see the counters for selects not done with indexes.\n\n* ***Select Scan*** is how many queries caused full table scans, in which all the data in the table had to be read and either discarded or returned.\n* ***Select Range*** is how many queries used a range scan, which means MySQL scanned all rows in a given range.\n* ***Select Full Join*** is the number of joins that are not joined on an index, this is usually a huge performance hit.",
       "fieldConfig": {
@@ -1311,7 +1311,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Sorts**\n\nDue to a query's structure, order, or other requirements, MySQL sorts the rows before returning them. For example, if a table is ordered 1 to 10 but you want the results reversed, MySQL then has to sort the rows to return 10 to 1.\n\nThis graph also shows when sorts had to scan a whole table or a given range of a table in order to return the results and which could not have been sorted via an index.",
       "fieldConfig": {
@@ -1450,7 +1450,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Slow Queries**\n\nSlow queries are defined as queries being slower than the long_query_time setting. For example, if you have long_query_time set to 3, all queries that take longer than 3 seconds to complete will show on this graph.",
       "fieldConfig": {
@@ -1563,7 +1563,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**Aborted Connections**\n\nWhen a given host connects to MySQL and the connection is interrupted in the middle (for example due to bad credentials), MySQL keeps that info in a system table (since 5.6 this table is exposed in performance_schema).\n\nIf the amount of failed requests without a successful connection reaches the value of max_connect_errors, mysqld assumes that something is wrong and blocks the host from further connection.\n\nTo allow connections from that host again, you need to issue the ``FLUSH HOSTS`` statement.",
       "fieldConfig": {
@@ -1757,7 +1757,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -1775,7 +1775,7 @@
           "calculatedInterval": "2m",
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "datasourceErrors": {},
           "errors": {},
@@ -1809,7 +1809,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Network Traffic**\n\nHere we can see how much network traffic is generated by MySQL. Outbound is network traffic sent from MySQL and Inbound is network traffic MySQL has received.",
       "fieldConfig": {
@@ -1922,7 +1922,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Network Usage Hourly**\n\nHere we can see how much network traffic is generated by MySQL per hour. You can use the bar graph to compare data sent by MySQL and data received by MySQL.",
       "fieldConfig": {
@@ -2049,7 +2049,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "***System Memory***: Total Memory for the system.\\\n***InnoDB Buffer Pool Data***: InnoDB maintains a storage area called the buffer pool for caching data and indexes in memory.\\\n***TokuDB Cache Size***: Similar in function to the InnoDB Buffer Pool,  TokuDB will allocate 50% of the installed RAM for its own cache.\\\n***Key Buffer Size***: Index blocks for MYISAM tables are buffered and are shared by all threads. key_buffer_size is the size of the buffer used for index blocks.\\\n***Adaptive Hash Index Size***: When InnoDB notices that some index values are being accessed very frequently, it builds a hash index for them in memory on top of B-Tree indexes.\\\n ***Query Cache Size***: The query cache stores the text of a SELECT statement together with the corresponding result that was sent to the client. The query cache has huge scalability problems in that only one thread can do an operation in the query cache at the same time.\\\n***InnoDB Dictionary Size***: The data dictionary is InnoDB ‘s internal catalog of tables. InnoDB stores the data dictionary on disk, and loads entries into memory while the server is running.\\\n***InnoDB Log Buffer Size***: The MySQL InnoDB log buffer allows transactions to run without having to write the log to disk before the transactions commit.",
       "fieldConfig": {
@@ -2255,7 +2255,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**Top Command Counters**\n\nThe Com_{{xxx}} statement counter variables indicate the number of times each xxx statement has been executed. There is one status variable for each type of statement. For example, Com_delete and Com_update count [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements, respectively. Com_delete_multi and Com_update_multi are similar but apply to [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements that use multiple-table syntax.",
       "fieldConfig": {
@@ -2361,7 +2361,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**Top Command Counters Hourly**\n\nThe Com_{{xxx}} statement counter variables indicate the number of times each xxx statement has been executed. There is one status variable for each type of statement. For example, Com_delete and Com_update count [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements, respectively. Com_delete_multi and Com_update_multi are similar but apply to [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements that use multiple-table syntax.",
       "fieldConfig": {
@@ -2467,7 +2467,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "description": "**MySQL Handlers**\n\nHandler statistics are internal statistics on how MySQL is selecting, updating, inserting, and modifying rows, tables, and indexes.\n\nThis is in fact the layer between the Storage Engine and MySQL.\n\n* `read_rnd_next` is incremented when the server performs a full table scan and this is a counter you don't really want to see with a high value.\n* `read_key` is incremented when a read is done with an index.\n* `read_next` is incremented when the storage engine is asked to 'read the next index entry'. A high value means a lot of index scans are being done.",
       "fieldConfig": {
@@ -2567,7 +2567,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2665,7 +2665,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2762,7 +2762,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "0zDOyUA7k"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2870,7 +2870,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "description": "**MySQL Query Cache Memory**\n\nThe query cache has huge scalability problems in that only one thread can do an operation in the query cache at the same time. This serialization is true not only for SELECTs, but also for INSERT/UPDATE/DELETE.\n\nThis also means that the larger the `query_cache_size` is set to, the slower those operations become. In concurrent environments, the MySQL Query Cache quickly becomes a contention point, decreasing performance. MariaDB and AWS Aurora have done work to try and eliminate the query cache contention in their flavors of MySQL, while MySQL 8.0 has eliminated the query cache feature.\n\nThe recommended settings for most environments is to set:\n  ``query_cache_type=0``\n  ``query_cache_size=0``\n\nNote that while you can dynamically change these values, to completely remove the contention point you have to restart the database.",
           "fieldConfig": {
@@ -2982,7 +2982,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "description": "**MySQL Query Cache Activity**\n\nThe query cache has huge scalability problems in that only one thread can do an operation in the query cache at the same time. This serialization is true not only for SELECTs, but also for INSERT/UPDATE/DELETE.\n\nThis also means that the larger the `query_cache_size` is set to, the slower those operations become. In concurrent environments, the MySQL Query Cache quickly becomes a contention point, decreasing performance. MariaDB and AWS Aurora have done work to try and eliminate the query cache contention in their flavors of MySQL, while MySQL 8.0 has eliminated the query cache feature.\n\nThe recommended settings for most environments is to set:\n``query_cache_type=0``\n``query_cache_size=0``\n\nNote that while you can dynamically change these values, to completely remove the contention point you have to restart the database.",
           "fieldConfig": {
@@ -3147,7 +3147,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3244,7 +3244,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "fieldConfig": {
             "defaults": {
@@ -3375,7 +3375,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "description": "**MySQL Table Open Cache Status**\n\nThe recommendation is to set the `table_open_cache_instances` to a loose correlation to virtual CPUs, keeping in mind that more instances means the cache is split more times. If you have a cache set to 500 but it has 10 instances, each cache will only have 50 cached.\n\nThe `table_definition_cache` and `table_open_cache` can be left as default as they are auto-sized MySQL 5.6 and above (ie: do not set them to any value).",
           "fieldConfig": {
@@ -3528,7 +3528,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "description": "**MySQL Open Tables**\n\nThe recommendation is to set the `table_open_cache_instances` to a loose correlation to virtual CPUs, keeping in mind that more instances means the cache is split more times. If you have a cache set to 500 but it has 10 instances, each cache will only have 50 cached.\n\nThe `table_definition_cache` and `table_open_cache` can be left as default as they are auto-sized MySQL 5.6 and above (ie: do not set them to any value).",
           "fieldConfig": {
@@ -3659,7 +3659,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "0zDOyUA7k"
+            "uid": "${datasource}"
           },
           "description": "**MySQL Table Definition Cache**\n\nThe recommendation is to set the `table_open_cache_instances` to a loose correlation to virtual CPUs, keeping in mind that more instances means the cache is split more times. If you have a cache set to 500 but it has 10 instances, each cache will only have 50 cached.\n\nThe `table_definition_cache` and `table_open_cache` can be left as default as they are auto-sized MySQL 5.6 and above (ie: do not set them to any value).",
           "fieldConfig": {
@@ -3864,12 +3864,12 @@
         "allFormat": "glob",
         "current": {
           "selected": false,
-          "text": "10.2.0.63:9104",
-          "value": "10.2.0.63:9104"
+          "text": "10.2.0.13:9104",
+          "value": "10.2.0.13:9104"
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "0zDOyUA7k"
+          "uid": "${datasource}"
         },
         "definition": "label_values(mysql_up{kubernetes_namespace=\"singouins\"}, instance)",
         "hide": 0,
@@ -3890,6 +3890,23 @@
         "sort": 1,
         "type": "query",
         "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
       }
     ]
   },
