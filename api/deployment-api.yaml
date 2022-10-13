@@ -10,7 +10,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      name: api # For promtail logging
       tier: sep-backend
   strategy:
     type: Recreate
@@ -20,7 +20,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "5000"
       labels:
-        app: api
+        name: api # For promtail logging
         tier: sep-backend
     spec:
       restartPolicy: Always
@@ -40,28 +40,17 @@ spec:
         #  Enable debug mode is set to 'development'
         - name: FLASK_ENV
           value: 'production'
-        # Gunicorn env vars
-        - name: GUNICORN_HOST
-          value: '0.0.0.0'
-        - name: GUNICORN_PORT
-          value: '5000'
-        - name: GUNICORN_WORKERS
-          value: '1'
-        - name: GUNICORN_THREADS
-          value: '2'
-        - name: GUNICORN_RELOAD
-          value: '--reload'
         # App variables
         - name: SEP_REDIS_DB
           valueFrom:
             secretKeyRef:
               name: sep-backend-redis-secret
               key: redis-base
-        - name: SEP_ADMIN_TOKEN
+        - name: SEP_INTERNAL_TOKEN
           valueFrom:
             secretKeyRef:
-              name: sep-backend-discord-secret
-              key: admin-token
+              name: sep-backend-api-secret
+              key: api-internal-token
         - name: SEP_API_URL
           valueFrom:
             secretKeyRef:
@@ -93,6 +82,11 @@ spec:
             secretKeyRef:
               name: sep-backend-mariadb-secret
               key: mariadb-host
+        - name: SEP_MYSQL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-mariadb-secret
+              key: mariadb-port
         # SMTP variables
         - name: SEP_SMTP_FROM
           valueFrom:
@@ -131,14 +125,27 @@ spec:
             secretKeyRef:
               name: sep-backend-discord-secret
               key: invite-url
-        # LDP variables
-        - name: SEP_LDP_HOST
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-api-secret
-              key: ldp-host
-        - name: SEP_LDP_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-api-secret
-              key: ldp-token
+        # Other env vars
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Gunicorn env vars
+        #- name: GUNICORN_LEVEL
+        #  value: 'INFO'
+        #- name: GUNICORN_PORT
+        #  value: '5000'
+        #- name: GUNICORN_WORKERS
+        #  value: '1'
+        #- name: GUNICORN_THREADS
+        #  value: '2'
+        #- name: GUNICORN_RELOAD
+        #  value: 'True'
+        #- name: GUNICORN_LEVEL
+        #  value: 'INFO'
+        # Healthcheck
+        #livenessProbe:
+        #    httpGet:
+        #      path: /check
+        #      port: 5000
+        #    initialDelaySeconds: 10
+        #    timeoutSeconds: 5
+        #    periodSeconds: 60
