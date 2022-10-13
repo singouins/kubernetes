@@ -8,8 +8,10 @@ metadata:
     tier: sep-backend
 spec:
   selector:
-    app: wikijs
+    name: wikijs
     tier: sep-backend
   ports:
   - protocol: TCP
     port: 3000
+    targetPort: 3000
+    name: default

@@ -10,14 +10,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wikijs
+      name: wikijs # For promtail logging
       tier: sep-backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: wikijs
+        name: wikijs # For promtail logging
         tier: sep-backend
     spec:
 
@@ -31,6 +31,8 @@ spec:
           requests:
             memory: 64Mi
             cpu: 10m
+        ports:
+          - containerPort: 3000
         env:
         - name: DB_TYPE
           valueFrom:
