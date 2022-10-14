@@ -10,14 +10,17 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: python
+      name: discord # For promtail logging
       tier: sep-backend
   strategy:
     type: Recreate
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
       labels:
-        app: python
+        name: discord # For promtail logging
         tier: sep-backend
     spec:
       restartPolicy: Always
@@ -29,35 +32,39 @@ spec:
         command: ["/code/babi.py"]
         resources:
           limits:
-            memory: 64Mi
-            cpu: 100m
+            memory: 512Mi
+            cpu: 500m
           requests:
-            memory: 32Mi
-            cpu: 10m
+            memory: 128Mi
+            cpu: 50m
+        volumeMounts:
+        - name: kubeconfig-tea
+          mountPath: /etc/k8s/dev
         env:
         # Discord env vars
-        - name: TOKEN
+        - name: SEP_DISCORD_TOKEN
           valueFrom:
             secretKeyRef:
               name: sep-backend-discord-secret
-              key: token-babi
+              key: discord-token-babi
+        # Commented for production use
+        #- name: SEP_DISCORD_GUILD
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: sep-backend-discord-secret
+        #      key: discord-guild-id
         # App env vars
-        - name: SEP_API_URL
+        - name: SEP_INTERNAL_TOKEN
           valueFrom:
             secretKeyRef:
               name: sep-backend-api-secret
-              key: api-url
-        - name: SEP_ADMIN_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-discord-secret
-              key: admin-token
+              key: api-internal-token
         # PCS variables
         - name: SEP_PCS_URL
           valueFrom:
             secretKeyRef:
               name: sep-backend-pcs-secret
-              key: pcs-url-public
+              key: pcs-public-url
         # Redis variables
         - name: SEP_REDIS_DB
           valueFrom:
@@ -65,10 +72,8 @@ spec:
               name: sep-backend-redis-secret
               key: redis-base
         # Other env vars
-        - name: PYTHONUNBUFFERED
-          value: 'True'
-        - name: PYTHONIOENCODING
-          value: 'UTF-8'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
 
       - name: sep-backend-discord-hapi
         image: singouins/discord:latest
@@ -83,22 +88,43 @@ spec:
             cpu: 10m
         env:
         # Discord env vars
-        - name: TOKEN
+        - name: SEP_DISCORD_TOKEN
           valueFrom:
             secretKeyRef:
               name: sep-backend-discord-secret
-              key: token-hapi
+              key: discord-token-babi
+        - name: SEP_DISCORD_GUILD
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-guild-id
+        # SSL Validator env vars
+        - name: SEP_SSL_TARGET_HOST
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-ssl-target-host
+        - name: SEP_SSL_TARGET_PORT
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-ssl-target-port
+        - name: SEP_SSL_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-ssl-channel
+        - name: SEP_SSL_IMG_URL
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-ssl-img-url
         # App env vars
-        - name: SEP_API_URL
+        - name: SEP_INTERNAL_TOKEN
           valueFrom:
             secretKeyRef:
               name: sep-backend-api-secret
-              key: api-url # PROD url
-        - name: SEP_ADMIN_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-discord-secret
-              key: admin-token
+              key: api-internal-token
         # PCS variables
         - name: SEP_PCS_URL
           valueFrom:
@@ -112,7 +138,44 @@ spec:
               name: sep-backend-redis-secret
               key: redis-base
         # Other env vars
-        - name: PYTHONUNBUFFERED
-          value: 'True'
-        - name: PYTHONIOENCODING
-          value: 'UTF-8'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+
+      - name: sep-backend-discord-exporter
+        image: lordslair/discord-prometheus-exporter:1.3.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 50m
+          requests:
+            memory: 32Mi
+            cpu: 10m
+        env:
+        # Discord env vars
+        - name: EXPORTER_PORT
+          value: '8080'
+        - name: POLLING_INTERVAL
+          value: '10'
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-token-babi
+        # Other env vars
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+
+      volumes:
+      - name: kubeconfig-tea
+        configMap:
+          name: sep-backend-discord-k8s
+          items:
+          - key: kubeconfig-tea
+            path: kubeconfig.yaml
+      - name: kubeconfig-ufp
+        configMap:
+          name: sep-backend-discord-k8s
+          items:
+          - key: kubeconfig-ufp
+            path: kubeconfig.yaml
