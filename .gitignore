@@ -1,2 +1,7 @@
+# Ignored files (Production specific)
 *.production.yaml
 *.production.js
+
+# Ignored files (Development specific)
+*.development.yaml
+*.development.js
