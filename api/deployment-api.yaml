@@ -38,8 +38,8 @@ spec:
             cpu: 50m
         env:
         #  Enable debug mode is set to 'development'
-        - name: FLASK_ENV
-          value: 'production'
+        - name: FLASK_DEBUG
+          value: 'False'
         # App variables
         - name: SEP_REDIS_DB
           valueFrom:
