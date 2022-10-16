@@ -10,14 +10,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backup
+      name: backup # For promtail logging
       tier: sep-backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: backup
+        name: backup # For promtail logging
         tier: sep-backend
     spec:
       restartPolicy: Always
@@ -43,7 +43,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: pcs-env-auth
+                key: backup-pcs-env-auth
           - name: RCLONE_CONFIG_PCS_AUTH_VERSION
             valueFrom:
               secretKeyRef:
@@ -88,19 +88,19 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: pcs-dir
+                key: backup-pcs-dir
 
           # MYSQL specifics
           - name: MYSQL_DUMP
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: mysql-dump
+                key: backup-mysql-dump
           - name: MYSQL_DB_LIST
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: mysql-dblist
+                key: backup-mysql-dblist
           - name: MYSQL_DB_HOST
             valueFrom:
               secretKeyRef:
@@ -114,20 +114,20 @@ spec:
           - name: MYSQL_DB_PASS
             valueFrom:
               secretKeyRef:
-                name: sep-backend-mariadb-secret
-                key: mariadb-pass
+                name: sep-backend-backup-secret
+                key: backup-mysql-pass
           - name: MYSQL_DB_USER
             valueFrom:
               secretKeyRef:
-                name: sep-backend-mariadb-secret
-                key: mariadb-user
+                name: sep-backend-backup-secret
+                key: backup-mysql-user
 
           # REDIS specifics
           - name: REDIS_DUMP
             valueFrom:
               secretKeyRef:
                 name: sep-backend-backup-secret
-                key: redis-dump
+                key: backup-redis-dump
           - name: REDIS_DB_HOST
             valueFrom:
               secretKeyRef:
@@ -138,3 +138,15 @@ spec:
               secretKeyRef:
                 name: sep-backend-redis-secret
                 key: redis-port
+
+          # OUTPUT specifics
+          - name: LOG_INFO
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-backup-secret
+                key: backup-log-info
+          - name: LOG_DATE
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-backup-secret
+                key: backup-log-date
