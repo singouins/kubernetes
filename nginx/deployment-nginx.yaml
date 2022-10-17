@@ -23,6 +23,7 @@ spec:
         name: nginx # For promtail logging
         tier: sep-backend
     spec:
+      restartPolicy: Always
 
       containers:
       - name: sep-backend-nginx
@@ -45,6 +46,7 @@ spec:
           mountPath: /etc/letsencrypt
         - name: websites
           mountPath: /var/www/websites
+
       - name: sep-backend-nginx-certbot
         image: certbot/certbot
         resources:
@@ -61,7 +63,8 @@ spec:
            mountPath: /var/www/certbot
          - name: certs
            mountPath: /etc/letsencrypt
-      - name: nginx-exporter
+
+      - name: sep-backend-nginx-exporter
         image: nginx/nginx-prometheus-exporter
         resources:
           limits:
@@ -70,8 +73,6 @@ spec:
           requests:
             memory: 16Mi
             cpu: 10m
-
-      restartPolicy: Always
 
       volumes:
       - name: config
