@@ -14,6 +14,10 @@ spec:
       tier: sep-backend
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"
+        prometheus.io/path: "/metrics"
       labels:
         name: grafana # For promtail logging
         tier: sep-backend
@@ -35,11 +39,18 @@ spec:
                 secretKeyRef:
                   name: sep-backend-grafana-secret
                   key: grafana-db-type
-            - name: GF_DATABASE_HOST
+            - name: DATABASE_HOST
               valueFrom:
                 secretKeyRef:
-                  name: sep-backend-grafana-secret
-                  key: grafana-db-host
+                  name: sep-backend-mariadb-secret
+                  key: mariadb-host
+            - name: DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-mariadb-secret
+                  key: mariadb-port
+            - name: GF_DATABASE_HOST
+              value: "$(DATABASE_HOST):$(DATABASE_PORT)"
             - name: GF_DATABASE_USER
               valueFrom:
                 secretKeyRef:
@@ -65,3 +76,37 @@ spec:
                 secretKeyRef:
                   name: sep-backend-grafana-secret
                   key: grafana-admin-pass
+        - name: sep-backend-mysqld-exporter
+          image: prom/mysqld-exporter
+          resources:
+            limits:
+              memory: 32Mi
+              cpu: 50m
+            requests:
+              memory: 16Mi
+              cpu: 10m
+          env:
+            - name: DATA_SOURCE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-mariadb-secret
+                  key: mariadb-host
+            - name: DATA_SOURCE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-mariadb-secret
+                  key: mariadb-port
+            - name: DATA_SOURCE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-mariadb-secret
+                  key: mariadb-exporter-user
+            - name: DATA_SOURCE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: sep-backend-mariadb-secret
+                  key: mariadb-exporter-pass
+            - name: DATA_SOURCE_NAME
+              value: '$(DATA_SOURCE_USER):$(DATA_SOURCE_PASS)@($(DATA_SOURCE_HOST):$(DATA_SOURCE_PORT))/'
+          ports:
+          - containerPort: 9104
