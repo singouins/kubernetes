@@ -75,4 +75,6 @@ spec:
         name: varlibdockercontainers
   updateStrategy:
     type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
 ---
