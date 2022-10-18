@@ -54,10 +54,20 @@ data:
           - labels:
               level:
       - match:
-          selector: '{k8s_container_name=~"sep-backend-promtail|sep-backend-prometheus|sep-backend-loki|sep-backend-api"}'
+          selector: '{k8s_container_name=~"sep-backend-promtail|sep-backend-prometheus|sep-backend-loki|sep-backend-api|sep-backend-backup"}'
           stages:
           - regex:
               expression: 'std(err|out) F ?(.*)?level=(?P<log_level>(\w*)) '
+          - template:
+              source: log_level
+              template: "{{if .log_level}}{{ ToUpper .log_level }}{{end}}"
+          - labels:
+              level: log_level
+      - match:
+          selector: '{k8s_container_name=~"sep-backend-wikijs"}'
+          stages:
+          - regex:
+              expression: 'std(err|out) F .* \[(JOB|MASTER)\] (?P<log_level>(\w*)): '
           - template:
               source: log_level
               template: "{{if .log_level}}{{ ToUpper .log_level }}{{end}}"
