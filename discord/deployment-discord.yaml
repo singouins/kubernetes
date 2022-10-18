@@ -40,6 +40,8 @@ spec:
         volumeMounts:
         - name: kubeconfig-tea
           mountPath: /etc/k8s/dev
+        - name: kubeconfig-ufp
+          mountPath: /etc/k8s/prod
         env:
         # Discord env vars
         - name: SEP_DISCORD_TOKEN
