@@ -26,8 +26,8 @@ spec:
       restartPolicy: Always
 
       containers:
-      - name: sep-backend-discord-babi
-        image: singouins/discord:latest
+      - name: sep-backend-discord-commands
+        image: singouins/discord:1.0.0-beta.3
         imagePullPolicy: Always
         command: ["/code/babi.py"]
         resources:
@@ -77,8 +77,8 @@ spec:
         - name: LOGURU_LEVEL
           value: 'DEBUG'
 
-      - name: sep-backend-discord-hapi
-        image: singouins/discord:latest
+      - name: sep-backend-discord-tasks
+        image: singouins/discord:1.0.0-beta.3
         imagePullPolicy: Always
         command: ["/code/hapi.py"]
         resources:
