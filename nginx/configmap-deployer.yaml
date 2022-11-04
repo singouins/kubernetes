@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  namespace: singouins
+  name: sep-backend-deployer
+  labels:
+    tier: sep-backend
+data:
+  deployer-sh : |
+    #!/bin/sh
+    FULLPATH="${OUTPUT_PATH}/${OUTPUT_FOLDER}"
+
+    printf "\e[94m"
+    printf "level=debug | branch:%s\n" "${GIT_BRANCH}"
+    printf "level=debug | folder:%s\n" "${OUTPUT_FOLDER}"
+    printf "level=debug | git:%s/%s.git\n" "${GIT_USER}" "${GIT_REPO}"
+    printf "level=debug | path:%s\n" "${OUTPUT_PATH}"
+    printf "level=debug | quiet:%s\n" "${GIT_QUIET}"
+    printf 'level=debug | -----\e[0m\n'
+
+    # We check existence of the node user1
+    # As we will need it to run git commands (for file permissins)
+    if getent passwd node > /dev/null;
+    then
+      printf "\e[94mlevel=debug | User:node exists\e[0m\n"
+    else
+      if adduser -h "${OUTPUT_FOLDER}" -u 1000 -D -H node;
+      then
+        printf "level=info  | User:node creation [\e[92m✓\e[0m]\n"
+      else
+        printf "level=error | User:node creation [\e[91m✗\e[0m]\n"
+      fi
+    fi
+
+    if [ -d "${OUTPUT_PATH}" ]
+    then
+      # The BASE folder exists
+      if [ -d "${FULLPATH}" ]
+      then
+        # The FULL folder exists == the branch was already cloned
+        # We just need to `git pull`
+        if su node -c "cd ${FULLPATH} && git pull ${GIT_QUIET}";
+        then
+          printf "level=info  | Pulling [\e[92m✓\e[0m]\n"
+        else
+          printf "level=error | Pulling [\e[91m✗\e[0m]\n"
+        fi
+      else
+        # The FULL folder do not exists == the branch was not cloned yet
+        # We just need to `git clone`
+        if su node -c "
+            git clone \
+            ${GIT_QUIET} \
+            --branch ${GIT_BRANCH} \
+            --single-branch \
+            https://${GIT_USER}:${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git \
+            ${FULLPATH}
+            ";
+        then
+          printf "level=info  | Cloning [\e[92m✓\e[0m]\n"
+        else
+          printf "level=error | Cloning [\e[91m✗\e[0m]\n"
+        fi
+      fi
+    else
+      # The BASE folder does not exist
+      printf "level=error | Cloning not performed (FULLPATH not found)\n"
+    fi
+    printf "level=info  | We're done\n"
