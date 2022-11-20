@@ -4,12 +4,12 @@ kind: Service
 metadata:
   namespace: singouins
   name: sep-backend-ws-svc
-  labels:
-    tier: sep-backend
 spec:
   selector:
-    app: ws
+    name: ws
     tier: sep-backend
   ports:
   - protocol: TCP
     port: 5000
+    targetPort: 5000
+    name: websocket

@@ -10,7 +10,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ws
+      name: ws
       tier: sep-backend
   strategy:
     type: Recreate
@@ -20,7 +20,7 @@ spec:
         prometheus.io/scrape: "false"
         prometheus.io/port: "5000"
       labels:
-        app: ws
+        name: ws
         tier: sep-backend
     spec:
       restartPolicy: Always
