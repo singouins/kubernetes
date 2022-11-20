@@ -27,7 +27,7 @@ spec:
 
       containers:
       - name: sep-backend-api
-        image: singouins/api:1.0.0-beta.4
+        image: singouins/api:1.0.0-beta.5
         imagePullPolicy: Always
         resources:
           limits:
@@ -98,7 +98,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sep-backend-discord-secret
-              key: invite-url
+              key: discord-invite-url
         # Other env vars
         - name: LOGURU_LEVEL
           value: 'DEBUG'
