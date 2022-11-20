@@ -61,32 +61,6 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: jwt-secret
-        # MySQL variables
-        - name: SEP_MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-api-secret
-              key: sql-user
-        - name: SEP_MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-api-secret
-              key: sql-pass
-        - name: SEP_MYSQL_DB
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-api-secret
-              key: sql-base
-        - name: SEP_MYSQL_HOST
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-mariadb-secret
-              key: mariadb-host
-        - name: SEP_MYSQL_PORT
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-mariadb-secret
-              key: mariadb-port
         # SMTP variables
         - name: SEP_SMTP_FROM
           valueFrom:
