@@ -8,7 +8,7 @@ metadata:
     tier: sep-backend
 spec:
   selector:
-    app: api
+    name: api-internal
     tier: sep-backend
   ports:
   - protocol: TCP

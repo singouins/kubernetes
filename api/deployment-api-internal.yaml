@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins
+  name: sep-backend-api-internal
+  labels:
+    tier: sep-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: api-internal # For promtail logging
+      tier: sep-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+      labels:
+        name: api-internal # For promtail logging
+        tier: sep-backend
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: sep-backend-api-internal
+        image: singouins/api:1.0.0-beta.5
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 500m
+          requests:
+            memory: 128Mi
+            cpu: 50m
+        env:
+        #  Enable debug mode is set to 'development'
+        - name: FLASK_DEBUG
+          value: 'False'
+        # App variables
+        - name: SEP_REDIS_DB
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-base
+        - name: SEP_INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-api-secret
+              key: api-internal-token
+        - name: SEP_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-api-secret
+              key: api-url
+        - name: SEP_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-api-secret
+              key: jwt-secret
+        # SMTP variables
+        - name: SEP_SMTP_FROM
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-smtp-secret
+              key: smtp-from
+        - name: SEP_SMTP_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-smtp-secret
+              key: smtp-server
+        - name: SEP_SMTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-smtp-secret
+              key: smtp-user
+        - name: SEP_SMTP_PASS
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-smtp-secret
+              key: smtp-pass
+        - name: SEP_SMTP_HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-smtp-secret
+              key: smtp-host
+        # PCS variables
+        - name: SEP_PCS_URL
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-pcs-secret
+              key: pcs-public-url
+        # Discord variables
+        - name: SEP_DISCORD_URL
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-discord-secret
+              key: discord-invite-url
+        # Other env vars
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Gunicorn env vars
+        #- name: GUNICORN_LEVEL
+        #  value: 'INFO'
+        #- name: GUNICORN_PORT
+        #  value: '5000'
+        #- name: GUNICORN_WORKERS
+        #  value: '1'
+        #- name: GUNICORN_THREADS
+        #  value: '2'
+        #- name: GUNICORN_RELOAD
+        #  value: 'True'
+        #- name: GUNICORN_LEVEL
+        #  value: 'INFO'
+        # Healthcheck
+        #livenessProbe:
+        #    httpGet:
+        #      path: /check
+        #      port: 5000
+        #    initialDelaySeconds: 10
+        #    timeoutSeconds: 5
+        #    periodSeconds: 60
