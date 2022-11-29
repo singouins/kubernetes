@@ -36,14 +36,16 @@ spec:
           requests:
             memory: 32Mi
             cpu: 50m
+        # Network
+        ports:
+        - name: websocket
+          containerPort: 5000
         env:
         # WebSocket env vars
-        - name: SEP_WSS_HOST
-          value: '0.0.0.0'
-        - name: SEP_WSS_PORT
-          value: '5000'
-        - name: PYTHONUNBUFFERED
-          value: 'True'
+        #- name: SEP_WSS_HOST
+        #  value: '0.0.0.0'
+        #- name: SEP_WSS_PORT
+        #  value: '5000'
         # App variables
         - name: SEP_REDIS_DB
           valueFrom:
@@ -52,3 +54,17 @@ spec:
               key: redis-base
         - name: SEP_REDIS_SLEEP
           value: '1.0'
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        # Healthcheck
+        readinessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 60
