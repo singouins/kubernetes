@@ -163,7 +163,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: sep-backend-discord-secret
-              key: discord-token-babi
+              key: discord-token-hapi
         # Other env vars
         - name: LOGURU_LEVEL
           value: 'DEBUG'
