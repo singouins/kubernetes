@@ -29,7 +29,7 @@ spec:
       - name: sep-backend-discord-commands
         image: singouins/discord:1.0.0-beta.4
         imagePullPolicy: Always
-        command: ["/code/babi.py"]
+        command: ["/code/commands.py"]
         resources:
           limits:
             memory: 512Mi
@@ -80,7 +80,7 @@ spec:
       - name: sep-backend-discord-tasks
         image: singouins/discord:1.0.0-beta.4
         imagePullPolicy: Always
-        command: ["/code/hapi.py"]
+        command: ["/code/tasks.py"]
         resources:
           limits:
             memory: 128Mi
