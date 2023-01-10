@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins
+  name: sep-backend-ai
+  labels:
+    tier: sep-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ai # For promtail logging
+      tier: sep-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "false"
+        prometheus.io/port: "5000"
+      labels:
+        name: ai # For promtail logging
+        tier: sep-backend
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: sep-backend-ai
+        command: ["/bin/sh"]
+        args: ["-c", "while :; do sleep 12h; done;"]
+        image: singouins/ai:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 500m
+          requests:
+            memory: 128Mi
+            cpu: 50m
+        env:
+        # App variables
+        - name: SEP_INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-api-secret
+              key: api-internal-token
+        # Other env vars
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Healthcheck
+        #livenessProbe:
+        #    httpGet:
+        #      path: /check
+        #      port: 5000
+        #    initialDelaySeconds: 10
+        #    timeoutSeconds: 5
+        #    periodSeconds: 60
