@@ -42,21 +42,19 @@ spec:
           containerPort: 5000
         env:
         # WebSocket env vars
-        #- name: SEP_WSS_HOST
+        #- name: WSS_HOST
         #  value: '0.0.0.0'
-        #- name: SEP_WSS_PORT
+        #- name: WSS_PORT
         #  value: '5000'
-        # App variables
-        - name: SEP_REDIS_DB
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-redis-secret
-              key: redis-base
-        - name: SEP_REDIS_SLEEP
+        #- name: WSS_QUEUE
+        #  value: 'broadcast'
+        - name: REDIS_SLEEP
           value: '1.0'
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
         # Healthcheck
         readinessProbe:
           tcpSocket:

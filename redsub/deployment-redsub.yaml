@@ -35,17 +35,11 @@ spec:
         env:
         # Reminder, Redis needs to be set with, at minimum :
         # redis-cli> CONFIG SET notify-keyspace-events s$xE
-        # Redis variables
-        - name: SEP_REDIS_DB
-          valueFrom:
-            secretKeyRef:
-              name: sep-backend-redis-secret
-              key: redis-base
-        - name: SEP_REDIS_SUB_PATH
-          value: '*'
-        - name: SEP_REDIS_SUB_VERBOSE
-          value: 'False'
-        # Other env vars
+        #- name: REDSUB_PATH
+        #  value: '*'
+        #- name: REDSUB_QUEUE
+        #  value: 'yarqueue:discord'
+        # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'
         - name: PYTHONIOENCODING

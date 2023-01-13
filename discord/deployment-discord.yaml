@@ -27,7 +27,7 @@ spec:
 
       containers:
       - name: sep-backend-discord-commands
-        image: singouins/discord:1.0.0-beta.4
+        image: singouins/discord:latest
         imagePullPolicy: Always
         command: ["/code/commands.py"]
         resources:
@@ -78,7 +78,7 @@ spec:
           value: 'DEBUG'
 
       - name: sep-backend-discord-tasks
-        image: singouins/discord:1.0.0-beta.4
+        image: singouins/discord:latest
         imagePullPolicy: Always
         command: ["/code/tasks.py"]
         resources:
