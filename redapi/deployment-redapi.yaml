@@ -29,6 +29,8 @@ spec:
         #  Flask variables
         - name: FLASK_DEBUG
           value: 'False'
+        - name: CODE_ENOTFOUND
+          value: '200'
         - name: ACCESS_TOKEN
           valueFrom:
             secretKeyRef:
