@@ -25,7 +25,7 @@ spec:
 
       containers:
         - name: sep-backend-grafana
-          image: grafana/grafana:9.4.10
+          image: grafana/grafana:9.5.2
           resources:
             limits:
               memory: 128Mi
