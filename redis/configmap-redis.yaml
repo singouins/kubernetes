@@ -10,8 +10,8 @@ data:
     # Load modules at startup. If the server is not able to load modules
     # it will abort. It is possible to use multiple loadmodule directives.
     #
-    loadmodule /usr/lib/redis/modules/redisearch.so
-    loadmodule /usr/lib/redis/modules/rejson.so
+    loadmodule /opt/redis-stack/lib/redisearch.so
+    loadmodule /opt/redis-stack/lib/rejson.so
 
     ################################## NETWORK ####################################
     # Accept connections on the specified port, default is 6379 (IANA #815344).
