@@ -44,7 +44,7 @@ spec:
         - mountPath: /etc/redis
           name: config
       - name: sep-backend-redis-exporter
-        image: oliver006/redis_exporter:v1.33.0-alpine
+        image: oliver006/redis_exporter:v1.50.0-alpine
         resources:
           limits:
             memory: 32Mi
