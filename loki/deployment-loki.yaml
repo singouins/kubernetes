@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: sep-backend-loki
-        image: grafana/loki:2.7.5
+        image: grafana/loki:2.8.2
         args:
         - -config.file=/etc/loki/local-config.yaml
         resources:
