@@ -32,7 +32,7 @@ spec:
 
       containers:
         - name: sep-backend-prometheus
-          image: prom/prometheus:v2.37.8
+          image: prom/prometheus:v2.44.0
           resources:
             limits:
               memory: 1024Mi
