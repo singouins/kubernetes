@@ -24,10 +24,10 @@ spec:
         image: rediscommander/redis-commander:latest
         command: ["./bin/redis-commander.js"]
         args:
-          - --redis-host=sep-backend-redis-svc
-          - --redis-port=6379
-          - --redis-db=0
-          - --redis-label=PROD
+          - --redis-host=$(REDIS_HOST)
+          - --redis-port=$(REDIS_PORT)
+          - --redis-db=$(REDIS_BASE)
+          - "--redis-label=$(REDIS_LABEL)"
           - --noload
           - --nosave
         resources:
@@ -37,6 +37,27 @@ spec:
           requests:
             memory: 32Mi
             cpu: 10m
+        env:
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-host
+        - name: REDIS_PORT
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-port
+        - name: REDIS_BASE
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-base
+        - name: REDIS_LABEL
+          valueFrom:
+            secretKeyRef:
+              name: sep-backend-redis-secret
+              key: redis-label
         # Network
         ports:
         - name: redis-commander
