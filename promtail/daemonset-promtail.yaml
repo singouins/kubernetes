@@ -28,7 +28,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: grafana/promtail:2.6.1
+        image: grafana/promtail:2.7.5
         imagePullPolicy: Always
         name: sep-backend-promtail
         resources:
