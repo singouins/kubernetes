@@ -7,12 +7,10 @@ metadata:
 spec:
   selector:
     matchLabels:
-
       name: loki # For promtail logging
   template:
     metadata:
       labels:
-
         name: loki # For promtail logging
     spec:
       initContainers:
@@ -25,7 +23,7 @@ spec:
 
       containers:
       - name: sep-backend-loki
-        image: grafana/loki:2.6.1
+        image: grafana/loki:2.7.5
         args:
         - -config.file=/etc/loki/local-config.yaml
         resources:
