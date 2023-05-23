@@ -14,6 +14,17 @@ data:
     loadmodule /opt/redis-stack/lib/rejson.so
 
     ################################## NETWORK ####################################
+    # Protected mode is a layer of security protection, in order to avoid that
+    # Redis instances left open on the internet are accessed and exploited.
+    #
+    # When protected mode is on and the default user has no password, the server
+    # only accepts local connections from the IPv4 address (127.0.0.1), IPv6 address
+    # (::1) or Unix domain sockets.
+    #
+    # By default protected mode is enabled. You should disable it only if
+    # you are sure you want clients from other hosts to connect to Redis
+    # even if no authentication is configured.
+    protected-mode no
     # Accept connections on the specified port, default is 6379 (IANA #815344).
     # If port 0 is specified Redis will not listen on a TCP socket.
     port 6379
