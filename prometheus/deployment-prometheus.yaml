@@ -44,8 +44,14 @@ spec:
             - "--web.listen-address=:9090"
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
-            - "--storage.tsdb.retention.size=450GB"
+            - "--storage.tsdb.retention.size=$(RETENTION_SIZE)"
 #            - "--storage.tsdb.retention.time=365d"
+          env:
+          - name: RETENTION_SIZE
+            valueFrom:
+              secretKeyRef:
+                name: sep-backend-prometheus-secret
+                key: prometheus-retention-size
           ports:
             - containerPort: 9090
           volumeMounts:
