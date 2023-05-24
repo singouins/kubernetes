@@ -4,21 +4,17 @@ kind: Deployment
 metadata:
   namespace: singouins
   name: sep-backend-backup
-  labels:
-    tier: sep-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
       name: backup # For promtail logging
-      tier: sep-backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         name: backup # For promtail logging
-        tier: sep-backend
     spec:
       restartPolicy: Always
 
