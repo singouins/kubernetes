@@ -24,7 +24,7 @@ spec:
 
       containers:
       - name: sep-backend-redis-api
-        image: lordslair/redis-rest-api:latest
+        image: lordslair/redis-rest-api:1.0.0
         env:
         #  Flask variables
         - name: FLASK_DEBUG
