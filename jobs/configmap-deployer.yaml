@@ -4,28 +4,28 @@ kind: ConfigMap
 metadata:
   namespace: singouins
   name: sep-backend-deployer
-  labels:
-    tier: sep-backend
 data:
   deployer-sh : |
     #!/bin/sh
-    FULLPATH="${OUTPUT_PATH}/${OUTPUT_FOLDER}"
+    FULLPATH="${CUST_OUTPUT_PATH}/${CUST_OUTPUT_FOLDER}"
+    GIT_BIN=`which git`
 
     printf "\e[94m"
-    printf "level=debug | branch:%s\n" "${GIT_BRANCH}"
-    printf "level=debug | folder:%s\n" "${OUTPUT_FOLDER}"
-    printf "level=debug | git:%s/%s.git\n" "${GIT_USER}" "${GIT_REPO}"
-    printf "level=debug | path:%s\n" "${OUTPUT_PATH}"
-    printf "level=debug | quiet:%s\n" "${GIT_QUIET}"
+    printf "level=debug | branch:%s\n" "${CUST_GIT_BRANCH}"
+    printf "level=debug | folder:%s\n" "${CUST_OUTPUT_FOLDER}"
+    printf "level=debug | git:%s/%s.git\n" "${CUST_GIT_USER}" "${CUST_GIT_REPO}"
+    printf "level=debug | binary:%s\n" "${GIT_BIN}"
+    printf "level=debug | path:%s\n" "${CUST_OUTPUT_PATH}"
+    printf "level=debug | quiet:%s\n" "${CUST_GIT_QUIET}"
     printf 'level=debug | -----\e[0m\n'
 
-    # We check existence of the node user1
+    # We check existence of the node user
     # As we will need it to run git commands (for file permissins)
     if getent passwd node > /dev/null;
     then
       printf "\e[94mlevel=debug | User:node exists\e[0m\n"
     else
-      if adduser -h "${OUTPUT_FOLDER}" -u 1000 -D -H node;
+      if adduser -h "${CUST_OUTPUT_FOLDER}" -u 1000 -D -H node;
       then
         printf "level=info  | User:node creation [\e[92m✓\e[0m]\n"
       else
@@ -33,14 +33,14 @@ data:
       fi
     fi
 
-    if [ -d "${OUTPUT_PATH}" ]
+    if [ -d "${CUST_OUTPUT_PATH}" ]
     then
       # The BASE folder exists
       if [ -d "${FULLPATH}" ]
       then
         # The FULL folder exists == the branch was already cloned
         # We just need to `git pull`
-        if su node -c "cd ${FULLPATH} && git pull ${GIT_QUIET}";
+        if su node -c "cd ${FULLPATH} && ${GIT_BIN} pull ${CUST_GIT_QUIET}";
         then
           printf "level=info  | Pulling [\e[92m✓\e[0m]\n"
         else
@@ -50,11 +50,11 @@ data:
         # The FULL folder do not exists == the branch was not cloned yet
         # We just need to `git clone`
         if su node -c "
-            git clone \
-            ${GIT_QUIET} \
-            --branch ${GIT_BRANCH} \
+            ${GIT_BIN} clone \
+            ${CUST_GIT_QUIET} \
+            --branch ${CUST_GIT_BRANCH} \
             --single-branch \
-            https://${GIT_USER}:${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git \
+            https://${CUST_GIT_USER}:${CUST_GIT_TOKEN}@github.com/${CUST_GIT_USER}/${CUST_GIT_REPO}.git \
             ${FULLPATH}
             ";
         then

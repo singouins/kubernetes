@@ -64,63 +64,6 @@ spec:
          - name: certs
            mountPath: /etc/letsencrypt
 
-      - name: sep-backend-nginx-deployer
-        image: alpine/git:2.36.2
-        # Here we don't launch crond by default
-        # As production container DOES NOT launch automatic code pull
-        #command: ["crond"]
-        #args: ["-f", "-l", "2"]
-        command: ["/bin/sh"]
-        args: ["-c", "while :; do sleep 12h; done;"]
-        resources:
-          limits:
-            memory: 64Mi
-            cpu: 100m
-          requests:
-            memory: 16Mi
-            cpu: 50m
-        env:
-          - name: GIT_BRANCH
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-build-branch
-          - name: GIT_QUIET
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-quiet
-          - name: GIT_REPO
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-repo
-          - name: GIT_USER
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-user
-          - name: GIT_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-token
-          - name: OUTPUT_PATH
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-output-path
-          - name: OUTPUT_FOLDER
-            valueFrom:
-              secretKeyRef:
-                name: sep-backend-git-secret
-                key: git-angular-output-folder
-        volumeMounts:
-        - name: websites
-          mountPath: /var/www/websites
-        - name: deployer-sh
-          mountPath: /etc/periodic/daily
-
       - name: sep-backend-nginx-exporter
         image: nginx/nginx-prometheus-exporter
         resources:
@@ -144,13 +87,6 @@ spec:
           items:
           - key: htpasswd
             path: htpasswd
-      - name: deployer-sh
-        configMap:
-          name: sep-backend-deployer
-          items:
-          - key: deployer-sh
-            path: cron-deployer-sh
-            mode: 0755
       - name: certs
         persistentVolumeClaim:
           claimName: sep-backend-certbot-certs
