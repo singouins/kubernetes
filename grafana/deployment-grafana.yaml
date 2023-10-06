@@ -77,7 +77,7 @@ spec:
                   name: sep-backend-grafana-secret
                   key: grafana-admin-pass
         - name: sep-backend-mysqld-exporter
-          image: prom/mysqld-exporter
+          image: prom/mysqld-exporter:v0.14.0
           resources:
             limits:
               memory: 32Mi
