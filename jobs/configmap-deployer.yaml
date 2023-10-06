@@ -11,12 +11,13 @@ data:
     GIT_BIN=`which git`
 
     printf "\e[94m"
-    printf "level=debug | branch:%s\n" "${CUST_GIT_BRANCH}"
-    printf "level=debug | folder:%s\n" "${CUST_OUTPUT_FOLDER}"
-    printf "level=debug | git:%s/%s.git\n" "${CUST_GIT_USER}" "${CUST_GIT_REPO}"
-    printf "level=debug | binary:%s\n" "${GIT_BIN}"
-    printf "level=debug | path:%s\n" "${CUST_OUTPUT_PATH}"
-    printf "level=debug | quiet:%s\n" "${CUST_GIT_QUIET}"
+    printf "level=debug | git_binary:%s\n" "${GIT_BIN}"
+    printf "level=debug | git_branch:%s\n" "${CUST_GIT_BRANCH}"
+    printf "level=debug | git_user:%s\n" "${CUST_GIT_USER}"
+    printf "level=debug | git_repo:%s/%s.git\n" "${CUST_GIT_REPO}"
+    printf "level=debug | output_folder:%s\n" "${CUST_OUTPUT_FOLDER}"
+    printf "level=debug | output_path:%s\n" "${CUST_OUTPUT_PATH}"
+    printf "level=debug | output_quiet:%s\n" "${CUST_GIT_QUIET}"
     printf 'level=debug | -----\e[0m\n'
 
     # We check existence of the node user
@@ -54,7 +55,7 @@ data:
             ${CUST_GIT_QUIET} \
             --branch ${CUST_GIT_BRANCH} \
             --single-branch \
-            https://${CUST_GIT_USER}:${CUST_GIT_TOKEN}@github.com/${CUST_GIT_USER}/${CUST_GIT_REPO}.git \
+            https://${CUST_GIT_USER}:${CUST_GIT_TOKEN}@github.com/${CUST_GIT_REPO}.git \
             ${FULLPATH}
             ";
         then
