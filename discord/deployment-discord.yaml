@@ -76,6 +76,8 @@ spec:
         # Other env vars
         - name: LOGURU_LEVEL
           value: 'DEBUG'
+        - name: TZ
+          value: 'Europe/Paris'
 
       - name: sep-backend-discord-tasks
         image: singouins/discord:latest
@@ -142,6 +144,8 @@ spec:
         # Other env vars
         - name: LOGURU_LEVEL
           value: 'DEBUG'
+        - name: TZ
+          value: 'Europe/Paris'
 
       - name: sep-backend-discord-exporter
         image: lordslair/discord-prometheus-exporter:1.3.0
@@ -167,6 +171,8 @@ spec:
         # Other env vars
         - name: LOGURU_LEVEL
           value: 'DEBUG'
+        - name: TZ
+          value: 'Europe/Paris'
 
       volumes:
       - name: kubeconfig-tea
