@@ -61,12 +61,12 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: api-internal-token
-        # PCS variables
-        - name: SEP_PCS_URL
+        # Assets variables
+        - name: SEP_URL_ASSETS
           valueFrom:
             secretKeyRef:
-              name: sep-backend-pcs-secret
-              key: pcs-public-url
+              name: sep-backend-git-secret
+              key: git-assets-pages
         # Redis variables
         - name: SEP_REDIS_DB
           valueFrom:
@@ -129,12 +129,12 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: api-internal-token
-        # PCS variables
-        - name: SEP_PCS_URL
+        # Assets variables
+        - name: SEP_URL_ASSETS
           valueFrom:
             secretKeyRef:
-              name: sep-backend-pcs-secret
-              key: pcs-public-url
+              name: sep-backend-git-secret
+              key: git-assets-pages
         # Redis variables
         - name: SEP_REDIS_DB
           valueFrom:
