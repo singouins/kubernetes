@@ -16,7 +16,6 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: "false"
-        prometheus.io/port: "5000"
       labels:
         name: redis-api # For promtail logging
         tier: sep-backend

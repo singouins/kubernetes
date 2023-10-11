@@ -18,7 +18,6 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: "false"
-        prometheus.io/port: "5000"
       labels:
         name: ai # For promtail logging
         tier: sep-backend
@@ -46,8 +45,18 @@ spec:
               name: sep-backend-api-secret
               key: api-internal-token
         # Other env vars
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
         - name: LOGURU_LEVEL
           value: 'DEBUG'
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        - name: TZ
+          value: 'Europe/Paris'
         # Healthcheck
         #livenessProbe:
         #    httpGet:

@@ -18,7 +18,6 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: "false"
-        prometheus.io/port: "5000"
       labels:
         name: ws
         tier: sep-backend
