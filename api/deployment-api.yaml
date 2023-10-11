@@ -56,6 +56,8 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: jwt-secret
+        - name: SEP_TOKEN_DURATION
+          value: '60'
         # SMTP variables
         - name: SEP_SMTP_FROM
           valueFrom:
