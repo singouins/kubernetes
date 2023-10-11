@@ -42,7 +42,12 @@ spec:
             secretKeyRef:
               name: sep-backend-api-secret
               key: api-internal-token
-        # Other env vars
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
         - name: LOGURU_FORMAT
           value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
         - name: LOGURU_COLORIZE
@@ -51,10 +56,7 @@ spec:
           value: '<cyan><bold>'
         - name: LOGURU_LEVEL
           value: 'TRACE'
-        - name: PYTHONUNBUFFERED
-          value: 'True'
-        - name: PYTHONIOENCODING
-          value: 'UTF-8'
+        # Other env vars
         - name: TZ
           value: 'Europe/Paris'
         # Network
