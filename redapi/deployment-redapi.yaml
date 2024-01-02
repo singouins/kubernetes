@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: sep-backend-redis-api
-        image: lordslair/redis-rest-api:v1.2.0
+        image: lordslair/redis-rest-api:1.2.0
         resources:
           limits:
             memory: 128Mi
