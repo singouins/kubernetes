@@ -1,0 +1,307 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: promtail
+  namespace: singouins-monitoring
+spec:
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      name: promtail # For promtail logging
+  template:
+    metadata:
+      labels:
+        name: promtail # For promtail logging
+    spec:
+      serviceAccount: promtail-serviceaccount
+      serviceAccountName: promtail-serviceaccount
+
+      containers:
+      - name: promtail
+        image: grafana/promtail:2.8.2
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        imagePullPolicy: Always
+        args:
+        - -config.file=/etc/promtail/promtail.yaml
+        - -client.url=http://loki-svc:3100/api/prom/push
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+            scheme: HTTP
+          initialDelaySeconds: 10
+        ports:
+        - containerPort: 9080
+          name: http-metrics
+        securityContext:
+          privileged: true
+          runAsUser: 0
+
+        volumeMounts:
+        - name: promtail-config-volume
+          mountPath: /etc/promtail
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+
+      volumes:
+      - name: promtail-config-volume
+        configMap:
+          defaultMode: 420
+          name: promtail-configmap
+          items:
+          - key: promtail.yaml
+            path: promtail.yaml
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+        
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+---
+# https://opstrace.com/docs/guides/user/instrumenting-a-k8s-cluster#5-deploy-promtail-in-the-k8s-cluster-for-collecting-and-pushing-logs
+# Nginx   regex: https://regex101.com/r/udP0Lh/1
+# Metrics regex: https://regex101.com/r/zGXXJ2/1
+# Redis   regex: https://regex101.com/r/XwIoVS/1
+# API     regex: https://regex101.com/r/P7pDEe/1
+# Prom*   regex: https://regex101.com/r/WAaBhw/1
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: promtail-configmap
+  namespace: singouins-monitoring
+data:
+  promtail.yaml: |
+    server:
+      http_listen_port: 9080
+      http_listen_address: 0.0.0.0
+      grpc_listen_port: 0
+
+    positions:
+      filename: /tmp/positions.yaml
+
+    scrape_configs:
+    - pipeline_stages:
+      - docker:
+      - match:
+          selector: '{k8s_container_name="nginx"}'
+          stages:
+          - regex:
+              expression: 'stdout F ([^ ]*|-) - ([^ ]*|-) \[.*\] "[^ ]+ [^ ]+ [^ ]+" ((?P<status_warn>(4\d\d))|(?P<status_crit>(5\d\d))|(?P<status_info>(10\d|20\d|30\d))) [\d]+ "[^"]*" "[^"]*"? "((?P<http_host_none>[-])|(?P<http_host>[a-z0-9.]*))"?'
+          - template:
+              source: level
+              template: "{{if .http_host_none}}TRACE{{else if .status_warn}}WARN{{else if .status_crit}}CRIT{{else if .status_info}}INFO{{end}}"
+          - labels:
+              level:
+      - match:
+          selector: '{k8s_container_name="redis"}'
+          stages:
+          - regex:
+              expression: 'stdout F \d+:\w \d+ \w+ \d+ \d+:\d+:\d+.\d+ ((?P<status_warn>([#]))|(?P<status_notice>([*]))|(?P<status_verbose>([-]))|(?P<status_debug>([.])))'
+          - template:
+              source: level
+              template: "{{if .status_warn}}WARN{{else if .status_notice}}NOTICE{{else if .status_verbose}}VERBOSE{{else if .status_debug}}DEBUG{{end}}"
+          - labels:
+              level:
+      - match:
+          selector: '{k8s_namespace_name=~"singouins|singouins-dev"}'
+          stages:
+          - regex:
+              expression: 'stdout F ([^ ]*|-) - ([^ ]*|-) \[.*\] "[^ ]+ ((?P<get_metrics>(\/metrics))|(?P<get_status>(\/stub_status)))'
+          - template:
+              source: level
+              template: "{{if .get_metrics}}TRACE{{else if .get_status}}TRACE{{end}}"
+          - labels:
+              level:
+      - match:
+          selector: '{k8s_container_name=~"promtail|prometheus|loki|api|backup"}'
+          stages:
+          - regex:
+              expression: 'std(err|out) F ?(.*)?level=(?P<log_level>(\w*)) '
+          - template:
+              source: log_level
+              template: "{{if .log_level}}{{ ToUpper .log_level }}{{end}}"
+          - labels:
+              level: log_level
+      - match:
+          selector: '{k8s_container_name=~"wikijs"}'
+          stages:
+          - regex:
+              expression: 'std(err|out) F .* \[(JOB|MASTER)\] (?P<log_level>(\w*)): '
+          - template:
+              source: log_level
+              template: "{{if .log_level}}{{ ToUpper .log_level }}{{end}}"
+          - labels:
+              level: log_level
+      - match:
+          selector: '{k8s_container_name="api"}'
+          stages:
+          - regex:
+              expression: 'std(err|out) F (.*)? "[^ ]+ [^ ]+ [^ ]+" ((?P<status_warn>(40\d))|(?P<status_crit>(500))|(?P<status_info>(10\d|20\d|30\d))) '
+          - template:
+              source: level
+              template: "{{if .status_warn}}WARN{{else if .status_crit}}CRIT{{else if .status_info}}INFO{{end}}"
+          - labels:
+              level:
+      job_name: kubernetes-pods-name
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels:
+        - __meta_kubernetes_pod_label_name
+        target_label: __service__
+      - source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: __host__
+      - action: replace
+        replacement: $1
+        separator: /
+        source_labels:
+        - __meta_kubernetes_namespace
+        - __service__
+        target_label: k8s_app
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: k8s_namespace_name
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: k8s_pod_name
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_container_name
+        target_label: k8s_container_name
+
+      - replacement: /var/log/pods/*$1/*.log
+        separator: /
+        source_labels:
+        - __meta_kubernetes_pod_uid
+        - __meta_kubernetes_pod_container_name
+        target_label: __path__
+
+      - replacement: /var/log/pods/*$1/*.log
+        separator: /
+        source_labels:
+        - __meta_kubernetes_pod_uid
+        - __meta_kubernetes_pod_container_name
+        target_label: __path__
+
+    - pipeline_stages:
+      - docker:
+      job_name: kubernetes-pods-static
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: drop
+        regex: ^$
+        source_labels:
+        - __meta_kubernetes_pod_annotation_kubernetes_io_config_mirror
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_label_component
+        target_label: __service__
+
+      - source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: __host__
+
+      - action: drop
+        regex: ^$
+        source_labels:
+        - __service__
+
+      - action: replace
+        replacement: $1
+        separator: /
+        source_labels:
+        - __meta_kubernetes_namespace
+        - __service__
+        target_label: k8s_app
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: k8s_namespace_name
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: k8s_pod_name
+
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_container_name
+        target_label: k8s_container_name
+
+      - replacement: /var/log/pods/*$1/*.log
+        separator: /
+        source_labels:
+        - __meta_kubernetes_pod_annotation_kubernetes_io_config_mirror
+        - __meta_kubernetes_pod_container_name
+        target_label: __path__
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: promtail-clusterrole
+  namespace: singouins-monitoring
+rules:
+  - apiGroups: [""]
+    resources:
+    - nodes
+    - nodes/proxy
+    - services
+    - endpoints
+    - pods
+    verbs:
+    - get
+    - watch
+    - list
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: promtail-serviceaccount
+  namespace: singouins-monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: promtail-clusterrolebinding
+  namespace: singouins-monitoring
+subjects:
+    - kind: ServiceAccount
+      name: promtail-serviceaccount
+      namespace: singouins-monitoring
+roleRef:
+    kind: ClusterRole
+    name: promtail-clusterrole
+    apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: singouins-monitoring
+spec:
+  selector:
+    matchLabels:
+      name: loki # For promtail logging
+  template:
+    metadata:
+      labels:
+        name: loki # For promtail logging
+    spec:
+      securityContext:
+        fsGroup: 10001
+        runAsUser: 10001
+        runAsGroup: 10001
+
+      containers:
+      - name: loki
+        image: grafana/loki:2.8.2
+        args:
+        - -config.file=/etc/loki/loki.yaml
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - name: loki-config-volume
+          mountPath: /etc/loki
+        - name: loki-storage-volume
+          mountPath: /loki
+        ports:
+        - containerPort: 3100
+
+      volumes:
+      - name: loki-config-volume
+        configMap:
+          name: loki-configmap
+          items:
+          - key: loki.yaml
+            path: loki.yaml
+      - name: loki-storage-volume
+        persistentVolumeClaim:
+          claimName: loki-pvc
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-monitoring
+  name: loki-svc
+spec:
+  selector:
+    name: loki # For promtail logging
+  ports:
+  - protocol: TCP
+    port: 3100
+    targetPort: 3100
+    name: loki-http
+  - protocol: TCP
+    port: 9096
+    targetPort: 9096
+    name: loki-grpc
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-configmap
+  namespace: singouins-monitoring
+data:
+  loki.yaml: |
+    auth_enabled: false
+
+    server:
+      http_listen_address: 0.0.0.0
+      http_listen_port: 3100
+      grpc_listen_address: 0.0.0.0
+      grpc_listen_port: 9096
+
+    common:
+      path_prefix: /loki
+      storage:
+        filesystem:
+          chunks_directory: /loki/chunks
+          rules_directory: /loki/rules
+      replication_factor: 1
+      ring:
+        instance_addr: 127.0.0.1
+        kvstore:
+          store: inmemory
+
+    schema_config:
+      configs:
+        - from: 2020-10-24
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+
+    compactor:
+      retention_enabled: true
+      shared_store: filesystem
+      working_directory: /loki/compactor
+
+    ruler:
+      alertmanager_url: http://localhost:9093
