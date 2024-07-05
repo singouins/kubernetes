@@ -1,0 +1,165 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-dev
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: api # For promtail logging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+      labels:
+        name: api # For promtail logging
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: api
+        image: singouins/api:edge
+        command: ["/bin/sh"]
+        args: ["-c", "while :; do sleep 12h; done;"]
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 500m
+          requests:
+            memory: 128Mi
+            cpu: 50m
+        env:
+        #  Enable debug mode is set to 'development'
+        - name: FLASK_DEBUG
+          value: 'False'
+        # App variables
+        - name: SEP_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-secret
+              key: api-external-url
+        - name: SEP_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-secret
+              key: api-jwt-secret
+        - name: SEP_TOKEN_DURATION
+          value: '60'
+        # MongoDB variables
+        - name: MONGO_BASE
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-base
+        - name: MONGO_HOST
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-host
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-pass
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-user
+        # Redis variables
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-host
+        # SMTP variables
+        - name: SEP_SMTP_FROM
+          valueFrom:
+            secretKeyRef:
+              name: smtp-secret
+              key: smtp-from
+        - name: SEP_SMTP_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: smtp-secret
+              key: smtp-server
+        - name: SEP_SMTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: smtp-secret
+              key: smtp-user
+        - name: SEP_SMTP_PASS
+          valueFrom:
+            secretKeyRef:
+              name: smtp-secret
+              key: smtp-pass
+        - name: SEP_SMTP_HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: smtp-secret
+              key: smtp-host
+        # Discord variables
+        - name: SEP_DISCORD_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-secret
+              key: discord-invite-url
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
+        - name: LOGURU_TRACE_COLOR
+          value: '<blue><bold>'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
+        # Gunicorn env vars
+        #- name: GUNICORN_LEVEL
+        #  value: 'INFO'
+        #- name: GUNICORN_PORT
+        #  value: '5000'
+        #- name: GUNICORN_WORKERS
+        #  value: '1'
+        #- name: GUNICORN_THREADS
+        #  value: '2'
+        #- name: GUNICORN_RELOAD
+        #  value: 'True'
+        #- name: GUNICORN_LEVEL
+        #  value: 'INFO'
+        # Healthcheck
+        #livenessProbe:
+        #    httpGet:
+        #      path: /check
+        #      port: 5000
+        #    initialDelaySeconds: 10
+        #    timeoutSeconds: 5
+        #    periodSeconds: 60
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-dev
+  name: api-svc
+spec:
+  selector:
+    name: api # For promtail logging
+  ports:
+  - protocol: TCP
+    port: 5000
