@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-databases
+  name: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mongo-express # For promtail logging
+  template:
+    metadata:
+      labels:
+        name: mongo-express # For promtail logging
+    spec:
+
+      containers:
+      - name: mongo-express
+        image: mongo-express:1.0.0
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 100m
+          requests:
+            memory: 64Mi
+            cpu: 50m
+        env:
+        - name: ME_CONFIG_MONGODB_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-uri
+        - name: ME_CONFIG_MONGODB_SSL
+          value: "true"
+        - name: ME_CONFIG_BASICAUTH
+          value: "false"
+        - name: ME_CONFIG_BASICAUTH_USERNAME	
+          value: ""
+        - name: ME_CONFIG_BASICAUTH_PASSWORD
+          value: ""
+        - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+          value: "false"
+        # Network
+        ports:
+        - name: mongo-express
+          containerPort: 8081
+        # Healthcheck
+        #livenessProbe:
+        #    httpGet:
+        #      path: /status
+        #      port: 8081
+        #    initialDelaySeconds: 10
+        #    timeoutSeconds: 5
+        #readinessProbe:
+        #    httpGet:
+        #      path: /status
+        #      port: 8081
+        #    initialDelaySeconds: 5
+        #    periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-databases
+  name: mongo-express-svc
+spec:
+  selector:
+    name: mongo-express # For promtail logging
+  ports:
+  - name: mongo-express
+    protocol: TCP
+    port: 8081
+    targetPort: 8081

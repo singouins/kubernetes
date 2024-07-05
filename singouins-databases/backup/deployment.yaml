@@ -1,0 +1,182 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-databases
+  name: backup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: backup # For promtail logging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: backup # For promtail logging
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: backup
+        image: lordslair/easydbbackup:1.7.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: 100m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        env:
+          - name: RCLONE_CONFIG_PCS_TYPE
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-type
+          - name: RCLONE_CONFIG_PCS_ENV_AUTH
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-pcs-env-auth
+          - name: RCLONE_CONFIG_PCS_AUTH_VERSION
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-auth-version
+          - name: RCLONE_CONFIG_PCS_TENANT_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-tenant-domain
+          - name: RCLONE_CONFIG_PCS_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-domain
+          - name: RCLONE_CONFIG_PCS_AUTH
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-auth
+          - name: RCLONE_CONFIG_PCS_TENANT
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-tenant
+          - name: RCLONE_CONFIG_PCS_USER
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-private-user
+          - name: RCLONE_CONFIG_PCS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-private-key
+          - name: RCLONE_CONFIG_PCS_REGION
+            valueFrom:
+              secretKeyRef:
+                name: pcs-secret
+                key: pcs-region
+          - name: RCLONE_CONFIG_PCS_DIR
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-pcs-dir
+
+          # MONGODB specifics
+          - name: MONGODB_DUMP
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mongodb-dump
+          - name: MONGODB_EXPORT
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mongodb-export
+          - name: MONGO_DB_LIST
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mongodb-dblist
+          - name: MONGO_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mongodb-host
+          - name: MONGO_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mongodb-user
+          - name: MONGO_DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mongodb-pass
+
+
+
+          # MYSQL specifics
+          - name: MYSQL_DUMP
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mysql-dump
+          - name: MYSQL_DB_LIST
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mysql-dblist
+          - name: MYSQL_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: mariadb-host
+          - name: MYSQL_DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: mariadb-port
+          - name: MYSQL_DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mysql-pass
+          - name: MYSQL_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-mysql-user
+
+          # REDIS specifics
+          - name: REDIS_DUMP
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-redis-dump
+          - name: REDIS_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: redis-host
+          - name: REDIS_DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: redis-port
+
+          # OUTPUT specifics
+          - name: LOG_INFO
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-log-info
+          - name: LOG_DATE
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-log-date

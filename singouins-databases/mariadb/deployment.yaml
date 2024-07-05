@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: singouins-databases
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"
+        prometheus.io/path: "/metrics"
+      labels:
+        app: mariadb
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: mariadb
+        image: mariadb:11.2
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 200m
+          requests:
+            memory: 64Mi
+            cpu: 100m
+        volumeMounts:
+        - name: mariadb-volume
+          mountPath: /var/lib/mysql
+        env:
+        # MARIADB env vars
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-root-password
+
+      - name: mariadb-exporter
+        image: prom/mysqld-exporter:v0.14.0
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 50m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        env:
+          - name: DATA_SOURCE_HOST
+            value: '127.0.0.1'
+          - name: DATA_SOURCE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: mariadb-port
+          - name: DATA_SOURCE_USER
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: mariadb-exporter-user
+          - name: DATA_SOURCE_PASS
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: mariadb-exporter-pass
+          - name: DATA_SOURCE_NAME
+            value: '$(DATA_SOURCE_USER):$(DATA_SOURCE_PASS)@($(DATA_SOURCE_HOST):$(DATA_SOURCE_PORT))/'
+        ports:
+        - containerPort: 9104
+
+      volumes:
+      - name: mariadb-volume
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: singouins-databases
+  name: mariadb-svc
+spec:
+  selector:
+    app: mariadb
+  ports:
+  - protocol: TCP
+    port: 3306

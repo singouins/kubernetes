@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-databases
+  name: redis-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: redis # For promtail logging
+      env: dev
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+      labels:
+        name: redis # For promtail logging
+        env: dev
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: redis
+        image: redis/redis-stack:6.2.6-v7
+        command: ["redis-server", "/etc/redis/redis.conf"]
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 100m
+          requests:
+            memory: 32Mi
+            cpu: 50m
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-config-volume
+          mountPath: /etc/redis
+
+      - name: redis-exporter
+        image: oliver006/redis_exporter:v1.50.0-alpine
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 10m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        ports:
+        - containerPort: 9121
+
+      volumes:
+      - name: redis-config-volume
+        configMap:
+          name: redis-configmap
+          items:
+          - key: redis.conf
+            path: redis.conf
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-databases
+  name: redis-dev-svc
+spec:
+  selector:
+    name: redis # For promtail logging
+    env: dev
+  ports:
+  - name: redis
+    protocol: TCP
+    port: 6379
+  - name: redis-metrics
+    protocol: TCP
+    port: 9121

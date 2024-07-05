@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-databases
+  name: redis-commander
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: redis-commander # For promtail logging
+  template:
+    metadata:
+      labels:
+        name: redis-commander # For promtail logging
+    spec:
+
+      containers:
+      - name: redis-commander
+        image: rediscommander/redis-commander:latest
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: 50m
+          requests:
+            memory: 32Mi
+            cpu: 10m
+        env:
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-host
+        - name: REDIS_PORT
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-port
+        - name: REDIS_BASE
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-base
+        - name: REDIS_LABEL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-label
+        # Network
+        ports:
+        - name: redis-commander
+          containerPort: 8081
+        # Healthcheck
+        livenessProbe:
+            httpGet:
+              path: /favicon.png
+              port: 8081
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-databases
+  name: redis-commander-svc
+spec:
+  selector:
+    name: redis-commander # For promtail logging
+  ports:
+  - name: redis-commander
+    protocol: TCP
+    port: 8081
+    targetPort: 8081

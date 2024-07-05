@@ -1,0 +1,218 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-databases
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: redis # For promtail logging
+      env: prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+      labels:
+        name: redis # For promtail logging
+        env: prod
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: redis
+        image: redis/redis-stack:6.2.6-v7
+        command: ["redis-server", "/etc/redis/redis.conf"]
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 100m
+          requests:
+            memory: 32Mi
+            cpu: 50m
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-db-volume
+          mountPath: /data
+        - name: redis-config-volume
+          mountPath: /etc/redis
+
+      - name: redis-exporter
+        image: oliver006/redis_exporter:v1.50.0-alpine
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 10m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        ports:
+        - containerPort: 9121
+
+      volumes:
+      - name: redis-db-volume
+        persistentVolumeClaim:
+          claimName: redis-pvc
+      - name: redis-config-volume
+        configMap:
+          name: redis-configmap
+          items:
+          - key: redis.conf
+            path: redis.conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-configmap
+  namespace: singouins-databases
+data:
+  redis.conf: |
+    ################################## MODULES #####################################
+
+    # Load modules at startup. If the server is not able to load modules
+    # it will abort. It is possible to use multiple loadmodule directives.
+    #
+    loadmodule /opt/redis-stack/lib/redisearch.so
+    loadmodule /opt/redis-stack/lib/rejson.so
+
+    ################################## NETWORK ####################################
+    # Protected mode is a layer of security protection, in order to avoid that
+    # Redis instances left open on the internet are accessed and exploited.
+    #
+    # When protected mode is on and the default user has no password, the server
+    # only accepts local connections from the IPv4 address (127.0.0.1), IPv6 address
+    # (::1) or Unix domain sockets.
+    #
+    # By default protected mode is enabled. You should disable it only if
+    # you are sure you want clients from other hosts to connect to Redis
+    # even if no authentication is configured.
+    protected-mode no
+    # Accept connections on the specified port, default is 6379 (IANA #815344).
+    # If port 0 is specified Redis will not listen on a TCP socket.
+    port 6379
+    # TCP listen() backlog.
+    #
+    # In high requests-per-second environments you need a high backlog in order
+    # to avoid slow clients connection issues. Note that the Linux kernel
+    # will silently truncate it to the value of /proc/sys/net/core/somaxconn so
+    # make sure to raise both the value of somaxconn and tcp_max_syn_backlog
+    # in order to get the desired effect.
+    #
+    # @Lordslair: In our containers, somaxconn == 128
+    tcp-backlog 128
+
+    ############################## MEMORY MANAGEMENT ##############################
+    # Don't use more memory than the specified amount of bytes.
+    # When the memory limit is reached Redis will try to remove keys
+    # according to the eviction policy selected (see maxmemory-policy).
+    maxmemory 64mb
+    # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
+    # is reached. You can select among five behaviors:
+    #
+    # volatile-lru -> remove the key with an expire set using an LRU algorithm
+    # allkeys-lru -> remove any key according to the LRU algorithm
+    # volatile-random -> remove a random key with an expire set
+    # allkeys-random -> remove a random key, any key
+    # volatile-ttl -> remove the key with the nearest expire time (minor TTL)
+    # noeviction -> don't expire at all, just return an error on write operations
+    maxmemory-policy noeviction
+    # LRU, LFU and minimal TTL algorithms are not precise algorithms but approximated
+    # algorithms (in order to save memory), so you can tune it for speed or
+    # accuracy. By default Redis will check five keys and pick the one that was
+    # used least recently, you can change the sample size using the following
+    # configuration directive.
+    #
+    # The default of 5 produces good enough results. 10 Approximates very closely
+    # true LRU but costs more CPU. 3 is faster but not very accurate.
+    #
+    maxmemory-samples 5
+    # Redis reclaims expired keys in two ways: upon access when those keys are
+    # found to be expired, and also in background, in what is called the
+    # "active expire key". The key space is slowly and interactively scanned
+    # looking for expired keys to reclaim, so that it is possible to free memory
+    # of keys that are expired and will never be accessed again in a short time.
+    #
+    # The default effort of the expire cycle will try to avoid having more than
+    # ten percent of expired keys still in memory, and will try to avoid consuming
+    # more than 25% of total memory and to add latency to the system. However
+    # it is possible to increase the expire "effort" that is normally set to
+    # "1", to a greater value, up to the value "10". At its maximum value the
+    # system will use more CPU, longer cycles (and technically may introduce
+    # more latency), and will tolerate less already expired keys still present
+    # in the system. It's a tradeoff between memory, CPU and latency.
+    #
+    active-expire-effort 1
+
+    ############################# EVENT NOTIFICATION ##############################
+    # Keyspace notifications allow clients to subscribe to Pub/Sub channels in
+    # order to receive events affecting the Redis data set in some way.
+    # K     Keyspace events, published with __keyspace@<db>__ prefix.
+    # E     Keyevent events, published with __keyevent@<db>__ prefix.
+    # g     Generic commands (non-type specific) like DEL, EXPIRE, RENAME, ...
+    # $     String commands
+    # l     List commands
+    # s     Set commands
+    # h     Hash commands
+    # z     Sorted set commands
+    # t     Stream commands
+    # d     Module key type events
+    # x     Expired events (generated every time a key expires)
+    # e     Evicted events (generated when a key is evicted for maxmemory)
+    # m     Key miss events (generated when a key that doesn't exist is accessed)
+    # A     Alias for "g$lshztxed", so "AKE" means all the events except "m".
+    notify-keyspace-events s$xE
+
+    ################################# GENERAL #####################################
+    # Set the number of databases. The default database is DB 0, you can select
+    # a different one on a per-connection basis using SELECT <dbid> where
+    # dbid is a number between 0 and 'databases'-1
+    databases 1
+
+    ################################### CLIENTS ###################################
+    # Set the max number of connected clients at the same time. By default there
+    # is no limit, and it's up to the number of file descriptors the Redis process
+    # is able to open. The special value '0' means no limits.
+    # Once the limit is reached Redis will close all the new connections sending
+    # an error 'max number of clients reached'.
+    #
+    maxclients 128
+
+    ############################## APPEND ONLY MODE ###############################
+    # Note that you can have both the async dumps and the append only file if you
+    # like (you have to comment the "save" statements above to disable the dumps).
+    # Still if append only mode is enabled Redis will load the data from the
+    # log file at startup ignoring the dump.rdb file.
+    appendonly yes
+    # The name of the append only file (default: "appendonly.aof")
+    appendfilename appendonly.aof
+    # The fsync() call tells the Operating System to actually write data on disk
+    # instead to wait for more data in the output buffer. Some OS will really flush
+    # data on disk, some other OS will just try to do it ASAP.
+    # If unsure, use "everysec".
+    appendfsync everysec
+    # If you have latency problems turn this to "yes". Otherwise leave it as
+    # "no" that is the safest pick from the point of view of durability.
+    no-appendfsync-on-rewrite no
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-databases
+  name: redis-svc
+spec:
+  selector:
+    name: redis # For promtail logging
+    env: prod
+  ports:
+  - name: redis
+    protocol: TCP
+    port: 6379
+  - name: redis-metrics
+    protocol: TCP
+    port: 9121
