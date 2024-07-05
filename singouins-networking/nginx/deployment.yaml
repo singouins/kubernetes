@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-networking
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx # For promtail logging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113"
+        prometheus.io/path: "/metrics"
+      labels:
+        name: nginx # For promtail logging
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: nginx
+        image: nginx:1.24-alpine
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 1000m
+          requests:
+            memory: 32Mi
+            cpu: 100m
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: htpasswd-config-volume
+          mountPath: /etc/nginx/htpasswd
+        - name: certbot-www-volume
+          mountPath: /var/www/certbot
+        - name: certbot-certs-volume
+          mountPath: /etc/letsencrypt
+        - name: nginx-www-volume
+          mountPath: /var/www/websites
+
+      - name: certbot
+        image: certbot/certbot
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 50m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        command: ["/bin/sh"]
+        args: ["-c", "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"]
+        volumeMounts:
+         - name: certbot-www-volume
+           mountPath: /var/www/certbot
+         - name: certbot-certs-volume
+           mountPath: /etc/letsencrypt
+
+      - name: exporter
+        image: nginx/nginx-prometheus-exporter:1.1.0
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 50m
+          requests:
+            memory: 16Mi
+            cpu: 10m
+        ports:
+        - containerPort: 9113
+
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-configmap
+          items:
+          - key: site.conf
+            path: site.conf
+      - name: htpasswd-config-volume
+        configMap:
+          name: nginx-configmap
+          items:
+          - key: htpasswd
+            path: htpasswd
+      - name: certbot-certs-volume
+        persistentVolumeClaim:
+          claimName: certbot-certs-pvc
+      - name: certbot-www-volume
+        persistentVolumeClaim:
+          claimName: certbot-www-pvc
+      - name: nginx-www-volume
+        persistentVolumeClaim:
+          claimName: nginx-www-pvc
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-networking
+  name: nginx-svc
+spec:
+  selector:
+    name: nginx # For promtail logging
+  ports:
+  - protocol: TCP
+    port: 80
+    name: http
+  - protocol: TCP
+    port: 443
+    name: https
+  - protocol: TCP
+    port: 9113
+    name: metrics
