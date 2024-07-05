@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-prod
+  name: ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ai # For promtail logging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "false"
+      labels:
+        name: ai # For promtail logging
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: ai
+        image: singouins/ai:1.0.0-beta.10
+        imagePullPolicy: Always
+        #command: ["/bin/sh"]
+        #args: ["-c", "while :; do sleep 24h; done;"]
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 500m
+          requests:
+            memory: 128Mi
+            cpu: 50m
+        env:
+        # Redis variables
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-host
+        # Resolver variables
+        - name: RESOLVER_HOST
+          valueFrom:
+            secretKeyRef:
+              name: resolver-secret
+              key: resolver-host
+        - name: RESOLVER_PORT
+          valueFrom:
+            secretKeyRef:
+              name: resolver-secret
+              key: resolver-port
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
+        # Healthcheck
+        livenessProbe:
+            httpGet:
+              path: /check
+              port: 5000
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 60

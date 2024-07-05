@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-prod
+  name: ws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ws
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "false"
+      labels:
+        name: ws
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: ws
+        image: singouins/ws:1.0.0-beta.10
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: 100m
+          requests:
+            memory: 32Mi
+            cpu: 50m
+        # Network
+        ports:
+        - name: websocket
+          containerPort: 5000
+        env:
+        # WebSocket env vars
+        #- name: WSS_HOST
+        #  value: '0.0.0.0'
+        #- name: WSS_PORT
+        #  value: '5000'
+        #- name: WSS_QUEUE
+        #  value: 'broadcast'
+        - name: REDIS_SLEEP
+          value: '1.0'
+        # Redis variables
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-host
+        # Redis PubSub env vars
+        #- name: PUBSUB_PATH
+        #  value: '*'
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
+        # Healthcheck
+        readinessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 60
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  namespace: singouins-prod
+  name: ws-svc
+spec:
+  selector:
+    name: ws
+  ports:
+  - name: websocket
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
+    
