@@ -1,0 +1,258 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-backend
+  name: discord
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: discord # For promtail logging
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+      labels:
+        name: discord # For promtail logging
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: commands
+        image: lordslair/discord:mongo
+        command: ["/bin/sh"]
+        args: ["-c", "while :; do sleep 12h; done;"]
+        imagePullPolicy: Always
+        #command: ["/code/commands.py"]
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 500m
+          requests:
+            memory: 128Mi
+            cpu: 50m
+        volumeMounts:
+        - name: kubeconfig-config-volume
+          mountPath: /etc/k8s
+        env:
+        # MongoDB variables
+        - name: MONGO_HOST
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-mongodb-host
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-mongodb-pass
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-mongodb-user
+        # Redis variables
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-redis-host
+        # Discord env vars
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-token-babi
+        # Commented for production use
+        #- name: DISCORD_GUILD
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: discord-secret
+        #      key: discord-guild-id
+        # Assets variables
+        - name: URL_ASSETS
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: git-assets-pages
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
+
+      - name: tasks
+        image: singouins/discord:1.0.0-beta.10
+        command: ["/bin/sh"]
+        args: ["-c", "while :; do sleep 12h; done;"]
+        imagePullPolicy: Always
+        #command: ["/code/tasks.py"]
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 200m
+          requests:
+            memory: 32Mi
+            cpu: 10m
+        env:
+        # Redis variables
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-redis-host
+        # Discord env vars
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-token-babi
+        # SSL Validator env vars
+        - name: SSL_CHECK
+          value: 'True'
+        - name: SSL_TARGET_HOST
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-ssl-target-host
+        - name: SSL_TARGET_PORT
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-ssl-target-port
+        - name: SSL_CHANNEL
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-ssl-channel
+        - name: SSL_IMG_URL
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-ssl-img-url
+        # Assets variables
+        - name: URL_ASSETS
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: git-assets-pages
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
+
+      - name: kubectl
+        image: lordslair/discord-k8s-bot:0.2.0
+        #command: ["/bin/sh"]
+        #args: ["-c", "while :; do sleep 12h; done;"]
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 100m
+          requests:
+            memory: 128Mi
+            cpu: 50m
+        volumeMounts:
+        - name: kubeconfig-config-volume
+          mountPath: /etc/k8s/
+        env:
+        # Discord env vars
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-token-hapi
+        - name: DISCORD_ROLE
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-admin-role
+        - name: K8S_NAMESPACES
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-k8s-namespaces
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
+
+      - name: exporter
+        image: lordslair/discord-prometheus-exporter:1.3.0
+        command: ["/bin/sh"]
+        args: ["-c", "while :; do sleep 12h; done;"]
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 32Mi
+            cpu: 50m
+          requests:
+            memory: 32Mi
+            cpu: 10m
+        env:
+        # Discord env vars
+        - name: EXPORTER_PORT
+          value: '8080'
+        - name: POLLING_INTERVAL
+          value: '10'
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-token-babi
+        # Other env vars
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
+        - name: TZ
+          value: 'Europe/Paris'
+
+      volumes:
+      - name: kubeconfig-config-volume
+        configMap:
+          name: discord-configmap
+          items:
+          - key: kubeconfig
+            path: kubeconfig.yaml
