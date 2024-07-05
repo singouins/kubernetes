@@ -1,1 +1,1 @@
-# singouins-k8s
+# singouins-kubernetes
