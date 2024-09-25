@@ -42,10 +42,7 @@ spec:
               key: redis-api-token
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
+          value: 'redis-svc.singouins-databases'
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'

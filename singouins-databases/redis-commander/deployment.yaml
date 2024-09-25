@@ -27,25 +27,13 @@ spec:
             cpu: 10m
         env:
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
+          value: 'redis-svc.singouins-databases'
         - name: REDIS_PORT
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-port
+          value: '6379'
         - name: REDIS_BASE
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-base
+          value: '0'
         - name: REDIS_LABEL
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-label
+          value: 'REDIS'
         # Network
         ports:
         - name: redis-commander

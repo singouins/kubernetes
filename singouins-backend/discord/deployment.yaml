@@ -57,10 +57,7 @@ spec:
               key: discord-mongodb-user
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: discord-secret
-              key: discord-redis-host
+          value: 'redis-svc.singouins-databases'
         # Discord env vars
         - name: DISCORD_TOKEN
           valueFrom:

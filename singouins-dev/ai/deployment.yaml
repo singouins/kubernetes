@@ -57,21 +57,7 @@ spec:
               key: mongodb-user
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
-        # Resolver variables
-        - name: RESOLVER_HOST
-          valueFrom:
-            secretKeyRef:
-              name: resolver-secret
-              key: resolver-host
-        - name: RESOLVER_PORT
-          valueFrom:
-            secretKeyRef:
-              name: resolver-secret
-              key: resolver-port
+          value: 'redis-svc.singouins-databases'
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'

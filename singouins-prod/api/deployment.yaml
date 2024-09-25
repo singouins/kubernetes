@@ -53,10 +53,7 @@ spec:
           value: '60'
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
+          value: 'redis-svc.singouins-databases'
         # SMTP variables
         - name: SEP_SMTP_FROM
           valueFrom:

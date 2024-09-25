@@ -41,13 +41,9 @@ spec:
         #  value: '0.0.0.0'
         #- name: WSS_PORT
         #  value: '5000'
-        #- name: WSS_QUEUE
-        #  value: 'broadcast'
-        - name: REDIS_SLEEP
-          value: '1.0'
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
+          value: 'redis-svc.singouins-databases'
             secretKeyRef:
               name: redis-secret
               key: redis-host
@@ -72,6 +68,7 @@ spec:
         - name: TZ
           value: 'Europe/Paris'
         # Healthcheck
+        # Commented in DEV
         readinessProbe:
           tcpSocket:
             port: 5000

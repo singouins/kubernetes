@@ -36,10 +36,7 @@ spec:
         env:
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
+          value: 'redis-svc.singouins-databases'
         # Resolver variables
         - name: RESOLVER_HOST
           valueFrom:

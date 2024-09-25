@@ -118,8 +118,6 @@ spec:
                 name: backup-secret
                 key: backup-mongodb-pass
 
-
-
           # MYSQL specifics
           - name: MYSQL_DUMP
             valueFrom:
@@ -159,15 +157,7 @@ spec:
                 name: backup-secret
                 key: backup-redis-dump
           - name: REDIS_DB_HOST
-            valueFrom:
-              secretKeyRef:
-                name: redis-secret
-                key: redis-host
-          - name: REDIS_DB_PORT
-            valueFrom:
-              secretKeyRef:
-                name: redis-secret
-                key: redis-port
+            value: 'redis-svc.singouins-databases'
 
           # OUTPUT specifics
           - name: LOG_INFO

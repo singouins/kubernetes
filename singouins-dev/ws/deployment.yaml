@@ -45,11 +45,7 @@ spec:
         #  value: '5000'
         # Redis variables
         - name: REDIS_HOST
-          valueFrom:
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
-        #- name: REDIS_PATH
+          value: 'redis-svc.singouins-databases'
         #  value: 'ws-broadcast'
         # Python env vars
         - name: PYTHONUNBUFFERED
