@@ -20,7 +20,7 @@ spec:
 
       containers:
       - name: backup
-        image: lordslair/easydbbackup:1.7.0
+        image: lordslair/easydbbackup:1.8.0
         imagePullPolicy: Always
         resources:
           limits:
@@ -30,61 +30,39 @@ spec:
             memory: 16Mi
             cpu: 10m
         env:
-          - name: RCLONE_CONFIG_PCS_TYPE
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-type
-          - name: RCLONE_CONFIG_PCS_ENV_AUTH
-            valueFrom:
-              secretKeyRef:
-                name: backup-secret
-                key: backup-pcs-env-auth
-          - name: RCLONE_CONFIG_PCS_AUTH_VERSION
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-auth-version
-          - name: RCLONE_CONFIG_PCS_TENANT_DOMAIN
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-tenant-domain
-          - name: RCLONE_CONFIG_PCS_DOMAIN
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-domain
-          - name: RCLONE_CONFIG_PCS_AUTH
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-auth
-          - name: RCLONE_CONFIG_PCS_TENANT
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-tenant
-          - name: RCLONE_CONFIG_PCS_USER
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-private-user
-          - name: RCLONE_CONFIG_PCS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-private-key
-          - name: RCLONE_CONFIG_PCS_REGION
-            valueFrom:
-              secretKeyRef:
-                name: pcs-secret
-                key: pcs-region
-          - name: RCLONE_CONFIG_PCS_DIR
+          # RCLONE specifics (remote)
+          - name: RCLONE_REMOTE_TYPE
+            value: 's3'
+          - name: RCLONE_REMOTE_PATH
             valueFrom:
               secretKeyRef:
                 name: backup-secret
-                key: backup-pcs-dir
+                key: backup-remote-path
+          # RCLONE specifics (auth)
+          - name: RCLONE_CONFIG_S3BACKUP_TYPE
+            value: 's3'
+          - name: RCLONE_CONFIG_S3BACKUP_ENV_AUTH
+            value: 'false'
+          - name: RCLONE_CONFIG_S3BACKUP_PROVIDER
+            value: 'Other'
+          - name: RCLONE_CONFIG_S3BACKUP_ACL
+            value: 'private'
+          - name: RCLONE_CONFIG_S3BACKUP_ENDPOINT
+            value: 'https://s3.waw.io.cloud.ovh.net'
+          - name: RCLONE_CONFIG_S3BACKUP_REGION
+            value: 'waw'
+          - name: RCLONE_CONFIG_S3BACKUP_LOCATION_CONSTRAINT
+            value: 'waw'
+          - name: RCLONE_CONFIG_S3BACKUP_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-remote-s3-access-key
+          - name: RCLONE_CONFIG_S3BACKUP_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: backup-secret
+                key: backup-remote-s3-secret-key
 
           # MONGODB specifics
           - name: MONGODB_DUMP
