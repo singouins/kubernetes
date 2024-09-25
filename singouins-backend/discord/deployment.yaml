@@ -111,9 +111,22 @@ spec:
         # App variables
         - name: API_ENV
           value: 'PROD'
+        # MongoDB variables
+        - name: MONGO_HOST
           valueFrom:
             secretKeyRef:
               name: discord-secret
+              key: discord-mongodb-host
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-mongodb-pass
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: discord-secret
+              key: discord-mongodb-user
         # Redis variables
         - name: REDIS_HOST
           value: 'redis-svc.singouins-databases'
