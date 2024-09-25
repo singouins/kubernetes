@@ -49,7 +49,12 @@ spec:
         # Redis variables
         - name: REDIS_HOST
           value: 'redis-svc.singouins-databases'
+        #- name: PS_BROADCAST
         #  value: 'ws-broadcast'
+        #- name: PS_EXPIRE
+        #  value: '__keyevent@0__:expired'
+        #- name: PS_SET
+        #  value: '__keyevent@0__:set'
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'

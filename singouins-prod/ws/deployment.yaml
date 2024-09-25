@@ -47,12 +47,12 @@ spec:
         # Redis variables
         - name: REDIS_HOST
           value: 'redis-svc.singouins-databases'
-            secretKeyRef:
-              name: redis-secret
-              key: redis-host
-        # Redis PubSub env vars
-        #- name: PUBSUB_PATH
-        #  value: '*'
+        #- name: PS_BROADCAST
+        #  value: 'ws-broadcast'
+        #- name: PS_EXPIRE
+        #  value: '__keyevent@0__:expired'
+        #- name: PS_SET
+        #  value: '__keyevent@0__:set'
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'
