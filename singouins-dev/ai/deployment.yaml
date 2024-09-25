@@ -80,6 +80,7 @@ spec:
           value: 'Europe/Paris'
         ports:
         - containerPort: 5000
+        - containerPort: 8000
         # Healthcheck
         #livenessProbe:
         #    httpGet:
