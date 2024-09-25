@@ -130,6 +130,8 @@ spec:
         # Redis variables
         - name: REDIS_HOST
           value: 'redis-svc.singouins-databases'
+        - name: YQ_CHECK
+          value: 'True'
         # Discord env vars
         - name: DISCORD_TOKEN
           valueFrom:
