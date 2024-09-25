@@ -38,6 +38,9 @@ spec:
         - name: websocket
           containerPort: 5000
         env:
+        # App variables
+        - name: API_ENV
+          value: 'DEV'
         # WebSocket env vars
         #- name: WSS_HOST
         #  value: '0.0.0.0'

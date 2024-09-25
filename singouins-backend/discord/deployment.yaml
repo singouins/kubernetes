@@ -108,12 +108,15 @@ spec:
             memory: 32Mi
             cpu: 10m
         env:
-        # Redis variables
-        - name: REDIS_HOST
+        # App variables
+        - name: API_ENV
+          value: 'PROD'
           valueFrom:
             secretKeyRef:
               name: discord-secret
-              key: discord-redis-host
+        # Redis variables
+        - name: REDIS_HOST
+          value: 'redis-svc.singouins-databases'
         # Discord env vars
         - name: DISCORD_TOKEN
           valueFrom:

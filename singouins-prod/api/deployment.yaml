@@ -39,7 +39,9 @@ spec:
         - name: FLASK_DEBUG
           value: 'False'
         # App variables
-        - name: SEP_API_URL
+        - name: API_ENV
+          value: 'PROD'
+        - name: API_URL
           valueFrom:
             secretKeyRef:
               name: api-secret

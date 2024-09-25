@@ -34,6 +34,9 @@ spec:
             memory: 128Mi
             cpu: 50m
         env:
+        # App variables
+        - name: API_ENV
+          value: 'DEV'
         # MongoDB variables
         - name: MONGO_BASE
           valueFrom:
