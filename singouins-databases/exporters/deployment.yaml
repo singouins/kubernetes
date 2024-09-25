@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  namespace: singouins-databases
+  name: exporters
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: exporters
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9216"
+        prometheus.io/path: "/metrics"
+      labels:
+        name: exporters
+    spec:
+
+      containers:
+        - name: mongodb-exporter
+          image: percona/mongodb_exporter:0.40.0
+          command: ["/mongodb_exporter"]
+#          args: ["-c", "while :; do sleep 12h; done;"]
+          args: [
+            '--mongodb.uri=mongodb://mongodb-exporter:eOE20ZLtuw8hXA74yfzs@node1-77bdb82948b5385b.database.cloud.ovh.net/admin?authSource=admin&ssl=true',
+            '--collector.dbstats',
+            '--discovering-mode',
+            '--compatible-mode'
+            ]
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 500m
+            requests:
+              memory: 64Mi
+              cpu: 100m
+#          env:
+#            - name: MONGODB_URI
+#              valueFrom:
+#                secretKeyRef:
+#                  name: mongodb-secret
+#                  key: mongodb-exporter-uri
+#            - name: MONGODB_USER
+#              valueFrom:
+#                secretKeyRef:
+#                  name: mongodb-secret
+#                  key: mongodb-exporter-user
+#            - name: MONGODB_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: mongodb-secret
+#                  key: mongodb-exporter-pass
+          ports:
+          - name: metrics
+            containerPort: 9216
+            protocol: TCP
+
+          securityContext:
+            allowPrivilegeEscalation: false
