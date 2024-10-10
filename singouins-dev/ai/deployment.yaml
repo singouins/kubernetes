@@ -22,9 +22,9 @@ spec:
 
       containers:
       - name: ai
+        image: singouins/ai:edge
         command: ["/bin/sh"]
         args: ["-c", "while :; do sleep 24h; done;"]
-        image: singouins/ai:edge
         imagePullPolicy: Always
         resources:
           limits:

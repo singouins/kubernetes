@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: api
-        image: singouins/api:1f7ac3f
+        image: singouins/api:edge
         command: ["/bin/sh"]
         args: ["-c", "while :; do sleep 12h; done;"]
         imagePullPolicy: Always
