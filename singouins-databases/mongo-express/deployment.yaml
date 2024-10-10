@@ -46,6 +46,8 @@ spec:
         - name: mongo-express
           containerPort: 8081
         # Healthcheck
+        # Can't use it with v1.0.0
+        # https://github.com/mongo-express/mongo-express-docker/issues/127
         #livenessProbe:
         #    httpGet:
         #      path: /status
