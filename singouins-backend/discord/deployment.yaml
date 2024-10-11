@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: commands
-        image: lordslair/discord:mongo
+        image: singouins/discord:1.0.0-beta.13
         command: ["/bin/sh"]
         args: ["-c", "while :; do sleep 12h; done;"]
         imagePullPolicy: Always
@@ -95,7 +95,7 @@ spec:
           value: 'Europe/Paris'
 
       - name: tasks
-        image: singouins/discord:1.0.0-beta.10
+        image: singouins/discord:1.0.0-beta.13
         command: ["/bin/sh"]
         args: ["-c", "while :; do sleep 12h; done;"]
         imagePullPolicy: Always
@@ -146,11 +146,6 @@ spec:
             secretKeyRef:
               name: discord-secret
               key: discord-ssl-target-host
-        - name: SSL_TARGET_PORT
-          valueFrom:
-            secretKeyRef:
-              name: discord-secret
-              key: discord-ssl-target-port
         - name: SSL_CHANNEL
           valueFrom:
             secretKeyRef:
@@ -161,12 +156,6 @@ spec:
             secretKeyRef:
               name: discord-secret
               key: discord-ssl-img-url
-        # Assets variables
-        - name: URL_ASSETS
-          valueFrom:
-            secretKeyRef:
-              name: discord-secret
-              key: git-assets-pages
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'

@@ -22,7 +22,7 @@ spec:
 
       containers:
       - name: ai
-        image: singouins/ai:1.0.0-beta.10
+        image: singouins/ai:1.0.0-beta.13
         imagePullPolicy: Always
         #command: ["/bin/sh"]
         #args: ["-c", "while :; do sleep 24h; done;"]
@@ -34,6 +34,30 @@ spec:
             memory: 128Mi
             cpu: 50m
         env:
+        # App variables
+        - name: API_ENV
+          value: 'PROD'
+        # MongoDB variables
+        - name: MONGO_BASE
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-base
+        - name: MONGO_HOST
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-host
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-pass
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-user
         # Redis variables
         - name: REDIS_HOST
           value: 'redis-svc.singouins-databases'
@@ -66,10 +90,10 @@ spec:
         - name: TZ
           value: 'Europe/Paris'
         # Healthcheck
-        livenessProbe:
-            httpGet:
-              path: /check
-              port: 5000
-            initialDelaySeconds: 10
-            timeoutSeconds: 5
-            periodSeconds: 60
+        #livenessProbe:
+        #    httpGet:
+        #      path: /check
+        #      port: 5000
+        #    initialDelaySeconds: 10
+        #    timeoutSeconds: 5
+        #    periodSeconds: 60

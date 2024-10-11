@@ -22,7 +22,9 @@ spec:
 
       containers:
       - name: ws
-        image: singouins/ws:1.0.0-beta.10
+        image: singouins/ws:1.0.0-beta.13
+        #command: ["/bin/sh"]
+        #args: ["-c", "while :; do sleep 24h; done;"]
         imagePullPolicy: Always
         resources:
           limits:

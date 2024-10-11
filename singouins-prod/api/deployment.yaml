@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: api
-        image: singouins/api:1.0.0-beta.11
+        image: singouins/api:1.0.0-beta.13
         #command: ["/bin/sh"]
         #args: ["-c", "while :; do sleep 24h; done;"]
         imagePullPolicy: Always
@@ -53,6 +53,27 @@ spec:
               key: api-jwt-secret
         - name: SEP_TOKEN_DURATION
           value: '60'
+        # MongoDB variables
+        - name: MONGO_BASE
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-base
+        - name: MONGO_HOST
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-host
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-pass
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-user
         # Redis variables
         - name: REDIS_HOST
           value: 'redis-svc.singouins-databases'
