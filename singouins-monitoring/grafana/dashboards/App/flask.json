@@ -1016,8 +1016,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1121,8 +1120,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1235,8 +1233,8 @@
       {
         "current": {
           "selected": true,
-          "text": "RedisAPI",
-          "value": "redis-api"
+          "text": "FrontAPI",
+          "value": "api"
         },
         "hide": 1,
         "includeAll": false,
@@ -1246,16 +1244,11 @@
         "options": [
           {
             "selected": true,
-            "text": "RedisAPI",
-            "value": "redis-api"
-          },
-          {
-            "selected": false,
             "text": "FrontAPI",
             "value": "api"
           }
         ],
-        "query": "RedisAPI : redis-api, FrontAPI : api",
+        "query": "FrontAPI : api",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -1263,7 +1256,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -1293,6 +1286,6 @@
   "timezone": "",
   "title": "App | Flask (API) Dashboard",
   "uid": "K5_HrxfMz",
-  "version": 27,
+  "version": 28,
   "weekStart": ""
 }
