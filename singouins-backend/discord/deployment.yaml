@@ -24,14 +24,12 @@ spec:
       containers:
       - name: commands
         image: singouins/discord:1.0.0-beta.13
-        command: ["/bin/sh"]
-        args: ["-c", "while :; do sleep 12h; done;"]
         imagePullPolicy: Always
-        #command: ["/code/commands.py"]
+        command: ["/code/commands.py"]
         resources:
           limits:
-            memory: 512Mi
-            cpu: 500m
+            memory: 128Mi
+            cpu: 200m
           requests:
             memory: 128Mi
             cpu: 50m
@@ -39,6 +37,9 @@ spec:
         - name: kubeconfig-config-volume
           mountPath: /etc/k8s
         env:
+        # App variables
+        - name: API_ENV
+          value: 'PROD'
         # MongoDB variables
         - name: MONGO_HOST
           valueFrom:
@@ -96,17 +97,15 @@ spec:
 
       - name: tasks
         image: singouins/discord:1.0.0-beta.13
-        command: ["/bin/sh"]
-        args: ["-c", "while :; do sleep 12h; done;"]
         imagePullPolicy: Always
-        #command: ["/code/tasks.py"]
+        command: ["/code/tasks.py"]
         resources:
           limits:
             memory: 128Mi
             cpu: 200m
           requests:
-            memory: 32Mi
-            cpu: 10m
+            memory: 64Mi
+            cpu: 50m
         env:
         # App variables
         - name: API_ENV
@@ -175,13 +174,11 @@ spec:
           value: 'Europe/Paris'
 
       - name: kubectl
-        image: lordslair/discord-k8s-bot:0.2.0
-        #command: ["/bin/sh"]
-        #args: ["-c", "while :; do sleep 12h; done;"]
+        image: lordslair/discord-k8s-bot:0.3.0
         imagePullPolicy: Always
         resources:
           limits:
-            memory: 256Mi
+            memory: 128Mi
             cpu: 100m
           requests:
             memory: 128Mi
