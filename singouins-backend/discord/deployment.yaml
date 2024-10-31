@@ -150,11 +150,6 @@ spec:
             secretKeyRef:
               name: discord-secret
               key: discord-ssl-channel
-        - name: SSL_IMG_URL
-          valueFrom:
-            secretKeyRef:
-              name: discord-secret
-              key: discord-ssl-img-url
         # Python env vars
         - name: PYTHONUNBUFFERED
           value: 'True'
