@@ -51,6 +51,11 @@ spec:
             secretKeyRef:
               name: api-secret
               key: api-internal-port
+        # Redis-API variables
+        - name: REDISAPI_HOST
+          value: 'redis-api-svc.singouins-databases'
+        - name: REDISAPI_PORT
+          value: '5000'
         # Network
         ports:
         - name: resolver
